@@ -193,10 +193,10 @@ def plot_i_v(input_amp, v_apic_max, p):
 		initialize_fig_panel_i_v(ax)		
 		ax.plot( i_dend, ctl_v_apic_max,
 				'o-', markersize=5, color='k', markerfacecolor='w', markeredgecolor="k", markeredgewidth=1,
-				label = 'control')
+				label = ctl)
 		ax.plot( i_dend, np.array( sics_v_apic_max[i_delay] ),
 				'o-', markersize=5, color='k', markerfacecolor='k', markeredgecolor="k", markeredgewidth=1,
-				label = modes[2])
+				label = sic_bac)
 		ax.plot( [np.min(i_dend), np.max(i_dend)], [Vth, Vth], 'r-' )
 		ax.set_ylim([-80, 40])
 		ax.legend()

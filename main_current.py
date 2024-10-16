@@ -13,7 +13,7 @@ if __name__ == "__main__":
 	
 	
 	sim_type = 'sic' # 'sic', 'bac', 'ttx'
-	dist_id = 4     # 0, ..., 11
+	dist_id  = 3     # 0, ..., 11
 	
 	p            = c.set_params(sim_type, dist_id)
 	wrapped_args = c.set_args_for_each_run(p)
@@ -31,10 +31,10 @@ if __name__ == "__main__":
 	
 	#m.create_simulation(wrapped_args[0]) # Single process
 	
-	'''
-	with Pool(4) as pool: # Multiple process
+	#'''
+	with Pool(30) as pool: # Multiple process
 		output = pool.map(m.create_simulation, wrapped_args)
-	'''
+	#'''
 	
 	
 	# Graph plot
