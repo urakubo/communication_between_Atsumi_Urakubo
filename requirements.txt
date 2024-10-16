@@ -1,0 +1,6 @@
+matplotlib==3.7.4
+multiprocess==0.70.12.2
+NEURON==8.2.0
+numpy==1.22.4
+scipy==1.10.1
+vtk==9.0.1

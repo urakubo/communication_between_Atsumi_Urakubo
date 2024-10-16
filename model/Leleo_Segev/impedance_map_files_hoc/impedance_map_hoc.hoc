@@ -1,0 +1,79 @@
+
+load_file("nrngui.hoc")
+
+xopen("$(NEURONHOME)/lib/hoc/noload.hoc")
+load_proc("nrnmainmenu")
+
+xopen("Neuron_parameters.hoc")
+
+geom_nseg()
+parameters()
+drug()
+init_channels()
+
+IMP_FREQ = 0
+
+MIN_Z_in = log(50)
+MAX_Z_in = log(60000)
+
+
+MIN_Z_tr = log(1)
+MAX_Z_tr = log(70)
+
+LOG_SCALE = 1
+
+forsec all{
+	insert var
+}
+
+
+objref imp,ps_i,ps_t,cm1,cm2
+cvode_active(0)
+soma{
+	imp = new Impedance()
+	imp.loc(0.5)
+	imp.compute(IMP_FREQ,0)
+}
+MIN_Z = 1000
+MAX_Z = 0
+forsec all{
+	for (x){
+		if (LOG_SCALE>0){
+			zin_var(x) =log(imp.input(x))
+			ztr_var(x) =log(imp.transfer(x))
+		}else{
+			zin_var(x) = imp.input(x)
+			ztr_var(x) = imp.transfer(x)
+		}
+	}
+}
+		
+
+
+
+load_file("TColorMap.hoc")
+
+ps_i =  new PlotShape()
+ps_i.exec_menu("View = plot")
+ps_i.variable("zin_var")
+cm1 = new TColorMap("cm/jet.cm")
+cm1.set_color_map(ps_i,MIN_Z_in,MAX_Z_in)
+fast_flush_list.append(ps_i)
+ps_i.exec_menu("Shape Plot")
+ps_i.exec_menu("Variable Scale")
+// Un tag in the human model:
+ps_i.rotate(0,0,0,0,0,1.6)
+
+
+ps_t =  new PlotShape()
+ps_t.exec_menu("View = plot")
+ps_t.variable("ztr_var")
+cm2 = new TColorMap("cm/jet.cm")
+cm2.set_color_map(ps_t,MIN_Z_tr,MAX_Z_tr)
+fast_flush_list.append(ps_t)
+ps_t.exec_menu("Shape Plot")
+ps_t.exec_menu("Variable Scale")
+
+// Un tag in the human model:
+ps_t.rotate(0,0,0,0,0,1.6)
+

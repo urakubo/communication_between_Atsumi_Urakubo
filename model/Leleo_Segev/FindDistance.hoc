@@ -1,0 +1,38 @@
+COMMENT
+Script for finding distance from soma of different medSegment values.
+ENDCOMMENT
+
+    load_file('nrngui.hoc')
+    load_file("import3d.hoc")
+    
+    CVode().active(0)
+    
+    morphologyFilename = "morphologies/cell1.asc"
+    #morphologyFilename = "morphologies/cell2.asc"
+    #morphologyFilename = "morphologies/cell3.asc"
+    #morphologyFilename = "morphologies/V1.ASC"
+    
+    #biophysicalModelFilename = "L5PCbiophys1.hoc"
+    #biophysicalModelFilename = "L5PCbiophys2.hoc"
+    #biophysicalModelFilename = "L5PCbiophys3.hoc"
+    #biophysicalModelFilename = "L5PCbiophys4.hoc"
+    #biophysicalModelFilename = "L5PCbiophys5.hoc"
+    biophysicalModelFilename = "L5PCbiophys5b.hoc"
+    
+    #biophysicalModelTemplateFilename = "L5PCtemplate.hoc"
+    biophysicalModelTemplateFilename = "L5PCtemplate_2.hoc"
+    
+    
+    #%%
+    
+    load_file("L5PCbiophys5b.hoc")
+    load_file("L5PCtemplate_2.hoc")
+    L5PCtemplate("morphologies/cell1.asc")
+
+
+    soma[0] distance()
+	
+	for k=0, len-1{
+        	apic[k] dist.x[k]=distance(.5)
+        	print dist.x[k]
+	}
