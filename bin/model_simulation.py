@@ -27,20 +27,37 @@ def apply_soma_ttx(cell):
 				sec(seg.x).gNap_Et2bar_Nap_Et2 = sec(seg.x).gNap_Et2bar_Nap_Et2 /20
 
 
+def distance_gIh(dist):
+	return 0.25 * 0.01*(1+np.cos(dist/1000*2*np.pi*2))
+	
 def create_cell():
 	
 	# Shape
 	
-	morphologyFilename = "model/Leleo_Segev/morphologies/cell1.asc"
-	biophysicalModelFilename = "model/Leleo_Segev/L5PCbiophys5b.hoc"
-	biophysicalModelTemplateFilename = "model/Leleo_Segev/L5PCtemplate.hoc"
+	biophysicalModelFilename = "./model/Leleo_Segev/L5PCbiophys5b.hoc"
+	biophysicalModelTemplateFilename = "./model/Leleo_Segev/L5PCtemplate_2.hoc"
+	morphologyFilename = "./model/Leleo_Segev/morphologies/cell1.asc"
+	
 	
 	h.load_file(biophysicalModelFilename)
 	h.load_file(biophysicalModelTemplateFilename)
 	L5PC = h.L5PCtemplate(morphologyFilename)
 	
 	h.distance(0, sec=L5PC.soma[0])
-
+	
+	
+	'''
+	# Ih distribution
+	max_apical_length = L5PC.getLongestBranch("apic")
+	print('max_apical_length ', max_apical_length)
+	for sec in L5PC.somatic:
+		sec.gIhbar_Ih = 0.01
+	for sec in L5PC.apical:
+		for seg in sec:
+			dist = h.distance(1, sec(seg.x))
+			sec(seg.x).gIhbar_Ih = distance_gIh(dist)
+	'''
+	
 	# Create section lists "apical tufts" and "apical trunk"
 	list_tuft = h.SectionList()
 	list_tuft.subtree(sec=L5PC.apic[36])
