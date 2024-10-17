@@ -105,7 +105,7 @@ proc distribute_channels()	{local dist,val,base,maxLength
 	base = $8
 	soma distance()
 	maxLength = getLongestBranch($s1)
-	print maxLength*0.65
+	// print maxLength*0.65
 	forsec $s1		{
 		if(0==strcmp($s2,"Ra")){
 			Ra = $8

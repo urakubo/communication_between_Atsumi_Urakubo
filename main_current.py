@@ -13,7 +13,7 @@ if __name__ == "__main__":
 	
 	
 	sim_type = 'sic' # 'sic', 'bac', 'ttx'
-	dist_id  = 4     # 0, ..., 11
+	dist_id  = 6     # 0, ..., 11
 	
 	p            = c.set_params(sim_type, dist_id)
 	wrapped_args = c.set_args_for_each_run(p)
