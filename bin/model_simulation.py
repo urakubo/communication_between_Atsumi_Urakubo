@@ -157,4 +157,5 @@ def create_simulation(arg):
 	rec.postprocessing(arg['i_dend_amp'] )
 	u.save(arg['filename'], rec.data)
 	
+	return True
 	

@@ -13,7 +13,7 @@ if __name__ == "__main__":
 	
 	
 	sim_type = 'sic' # 'sic', 'bac', 'ttx'
-	dist_id  = 6     # 0, ..., 11
+	dist_id  = 7     # 0, ..., 11
 	
 	p            = c.set_params(sim_type, dist_id)
 	wrapped_args = c.set_args_for_each_run(p)
@@ -31,10 +31,11 @@ if __name__ == "__main__":
 	
 	#m.create_simulation(wrapped_args[0]) # Single process
 	
-	#'''
+
+	'''
 	with Pool(30) as pool: # Multiple process
 		output = pool.map(m.create_simulation, wrapped_args)
-	#'''
+	'''
 	
 	
 	# Plot profiles
@@ -57,9 +58,9 @@ if __name__ == "__main__":
 	
 	
 	# Plot Ca spike amplitudes and the timing dependence
-	
+	#'''
 	u_graph.plot_i_v(g2.input_amp, g2.v_apic_max, p)
 	u_graph.plot_i_v2(input_amp, v_apic_max, p)
 	u_graph.plot_Ith_for_V_timing_dependence(input_amp_th, p)
-	
+	#'''
 	
