@@ -37,7 +37,7 @@ def initialize_fig_panel_i_v2(ax):
 def plot_profile(filename, recs, p, i_delay):
 	
 	time_prerun = p['time_prerun']
-	time_run    = p['time_run']
+	time_run    = p['time_run_after_prerun']
 	dist        = p['dist']
 	
 	## Plot membrane potential during simulation

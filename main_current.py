@@ -13,7 +13,7 @@ if __name__ == "__main__":
 	
 	
 	sim_type = 'sic' # 'sic', 'bac', 'ttx'
-	dist_id  = 3     # 0, ..., 11
+	dist_id  = 4     # 0, ..., 11
 	
 	p            = c.set_params(sim_type, dist_id)
 	wrapped_args = c.set_args_for_each_run(p)
@@ -29,12 +29,12 @@ if __name__ == "__main__":
 	os.makedirs(p['dir_data'], exist_ok=True)
 	os.makedirs(p['dir_imgs'], exist_ok=True)
 	
-	#m.create_simulation(wrapped_args[0]) # Single process
+	m.create_simulation(wrapped_args[0]) # Single process
 	
-	#'''
+	'''
 	with Pool(30) as pool: # Multiple process
 		output = pool.map(m.create_simulation, wrapped_args)
-	#'''
+	'''
 	
 	
 	# Graph plot

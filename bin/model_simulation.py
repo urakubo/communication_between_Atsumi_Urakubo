@@ -88,6 +88,7 @@ class Recording():
 		self.all = {}
 		self.i_all = []
 		self.time_prerun = arg['time_prerun']
+		self.onset_for_peak_detecion = arg['time_onset_for_v_peak_detection_after_prerun']
 
 	def clear_all(self):
 		self.all = {}
@@ -96,21 +97,9 @@ class Recording():
 	def postprocessing(self, input_amp):
 		self.data = { k: np.array(v['data']) for k, v in self.recs.items() }
 		self.data['input_amp'] = input_amp
-		flag = (np.array(self.recs['t']['data']) >= self.time_prerun)
+		flag = (np.array(self.recs['t']['data']) >= self.time_prerun + self.onset_for_peak_detecion)
 		tmp = np.array(self.recs['v_apic']['data'])
 		self.data['v_apic_max'] = np.max( tmp[flag] )
-
-	def add_to_all(self, i, input_amp):
-		self.all[i] = { k: np.array(v['data']) for k, v in self.recs.items() }
-		self.all[i]['input_amp'] = input_amp
-		flag = (np.array(self.recs['t']['data']) >= self.time_prerun)
-		tmp = np.array(self.recs['v_apic']['data'])
-		self.all[i]['v_apic_max'] = np.max( tmp[flag] )
-		self.i_all.append(i)
-
-	def arrange_data_for_all(self):
-		self.all['input_amp']  = [ self.all[i]['input_amp'] for i in self.i_all  ]
-		self.all['v_apic_max'] = [ self.all[i]['v_apic_max'] for i in self.i_all ]
 
 
 def create_simulation(arg):
@@ -118,7 +107,7 @@ def create_simulation(arg):
 	print('Somatic current: {}, Dendritic loc: {}, i_dend_delay: {}'.format( \
 		arg['i_soma_amp'], arg['dist'], arg['i_dend_delay'] ) )
 	
-	h.tstop = arg['time_prerun'] + arg['time_run']
+	h.tstop = arg['time_prerun'] + arg['time_run_after_prerun']
 	
 	# Initialization
 	L5PC, list_tuft, list_trunk, list_soma = create_cell()

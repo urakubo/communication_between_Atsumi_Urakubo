@@ -74,8 +74,9 @@ def set_params(sim_type, dist_id):
 		sys.exit(1)
 	
 	# Simulation time
-	p['time_prerun']     = 250
-	p['time_run']        = 350
+	p['time_prerun']                     = 550
+	p['time_run_after_prerun']           = 350
+	p['time_onset_for_v_peak_detection_after_prerun'] = -100
 	
 	return p
 
@@ -92,7 +93,8 @@ def set_args_for_each_run(p):
 	a['i_dend_seg']      = p['i_dend_seg']
 	
 	a['time_prerun']     = p['time_prerun']
-	a['time_run']        = p['time_run']
+	a['time_run_after_prerun'] = p['time_run_after_prerun']
+	a['time_onset_for_v_peak_detection_after_prerun'] = p['time_onset_for_v_peak_detection_after_prerun']
 	
 	a['Vth']  = p['Vth']
 	
