@@ -54,12 +54,12 @@ if __name__ == "__main__":
 	
 	# Get peak amplitudes of dendirtic membrane potentials
 	filename_data = p['dir_data'] + os.sep + 'distid_{}_simtype_{}'.format(dist_id, sim_type )
-	'''
+	#'''
 	g2 = u.I_V( p )
 	g2.run()
 	data  = (g2.input_amp, g2.v_apic_max, g2.input_amp_th)
 	u.save(filename_data, data)
-	'''
+	#'''
 	input_amp, v_apic_max, input_amp_th = u.load(filename_data) 
 	
 	
