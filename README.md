@@ -47,7 +47,7 @@ Simulation and analyses are conducted on the base directory. Executable programs
 | key | value type | description |
 | -------- | -------- | -------- |
 | **`apply_soma_ttx`** | bool | True or False. |
-| **`filename`** | str | directory and filename to store simulation results. |
+| **`filename`** | str | Directory and filename to store simulation results. |
 | **`i_dend_amp`** | float | Amplitude of dendritic current injection (nA). |
 | **`i_dend_delay`** | float | Onset time of dendritic current injection after prerun (ms). |
 | **`i_dend_sec_id`** | int | Section id (L5PC.apic[X]) of current injection site at the apical trunk. |
