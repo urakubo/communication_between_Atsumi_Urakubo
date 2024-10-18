@@ -88,7 +88,7 @@ def set_args_for_each_run(p):
 	a['i_soma_duration'] = p['i_soma_duration']
 	a['apply_soma_ttx']  = p['apply_soma_ttx']
 	
-	a['dist']            = p['dist']
+	#a['dist']            = p['dist']
 	a['i_dend_sec_id']   = p['i_dend_sec_id']
 	a['i_dend_seg']      = p['i_dend_seg']
 	

@@ -121,16 +121,12 @@ class Recording():
 
 def create_simulation(arg):
 	
-	print('Somatic current: {}, Dendritic loc: {}, i_dend_delay: {}'.format( \
-		arg['i_soma_amp'], arg['dist'], arg['i_dend_delay'] ) )
-	
+	# Model
 	h.tstop = arg['time_prerun'] + arg['time_run_after_prerun']
-	
-	# Initialization
 	L5PC, list_tuft, list_trunk, list_soma = create_cell()
 	h.distance(0, sec=L5PC.soma[0])
 	
-	#
+	# TTX
 	if 'apply_soma_ttx' in arg.keys() and arg['apply_soma_ttx'] == True:
 		apply_soma_ttx(L5PC)
 	
@@ -151,6 +147,12 @@ def create_simulation(arg):
 	# Set recording
 	rec = Recording(L5PC, current_soma, current_dend, arg)
 	
+	# Print built model
+	dist = h.distance(1, L5PC.apic[sec_id](seg))
+	print('Stimulation to the built model: Somatic current: {}, Dendritic loc: {:.1f}, i_dend_delay: {}'.format( \
+		arg['i_soma_amp'], dist, arg['i_dend_delay'] ) )
+	
+	# Simulation
 	run_simulation()
 	
 	# Save data
