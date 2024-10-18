@@ -21,10 +21,9 @@ Simulation and analyses are conducted on the base directory. Executable programs
 | .py file | functions |
 | -------- | -------- |
 | **`main_current.py`** | It simulates SIC, BAC, and the SIC during local application of TTX to the soma. |
-| **`configuration.py`** | It defines basic parameters. It also produces a series of the dict variable required for each run. The dict varible is read by the function "create_simulation". |
 | **`main_check_channel_distribution.py`**| It visualizes Na and Cation channel distribution. |
 | **`main_check_loc_distance.py`**| It was used to determine current injection sites along the apical trunk. |
-
+| **`configuration.py`** | It defines parameters. It also produces a series of the dict variable required for each run. The dict variable is read by the function "create_simulation". |
 
 
 #### Directories
@@ -35,7 +34,7 @@ Simulation and analyses are conducted on the base directory. Executable programs
 | **`x86_64`**| NEURON simulation complied for the neuron models (linux) |
 
 
-"main_current.py" calls the function "create_simulation" located in "src/model_simulation.py". The "create_simulation"  function accepts the following dict variable, builds a neuron model, run simulation, and save simulation results.
+"main_current.py" calls the function "create_simulation" located in "src/model_simulation.py". The "create_simulation"  function accepts the following dict variable, builds a model neuron, run simulation, and save simulation results.
 
 
 #### Dict variable for "create_simulation" (argument)
