@@ -149,8 +149,8 @@ def create_simulation(arg):
 	
 	# Print built model
 	dist = h.distance(1, L5PC.apic[sec_id](seg))
-	print('Stimulation to the built model: Somatic current: {}, Dendritic loc: {:.1f}, i_dend_delay: {}'.format( \
-		arg['i_soma_amp'], dist, arg['i_dend_delay'] ) )
+	print('Stimulation: somatic current: {} nA, dendritic current: {} nA, delay: {} ms, dist from soma: {:.1f} um'.\
+		format( arg['i_soma_amp'], arg['i_dend_amp'], arg['i_dend_delay'], dist ) )
 	
 	# Simulation
 	run_simulation()

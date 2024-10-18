@@ -29,7 +29,7 @@ if __name__ == "__main__":
 	os.makedirs(p['dir_data'], exist_ok=True)
 	os.makedirs(p['dir_imgs'], exist_ok=True)
 	
-	#m.create_simulation(wrapped_args[0]) # Single process
+	m.create_simulation(wrapped_args[0]) # Single process
 	
 
 	'''

@@ -13,7 +13,19 @@ All programs are written in Python3.8 (Windows/Linux) and designed for the simul
 
 ## Basic procedure
 
-Simulation and analyses are conducted on the base directory. Executable programs (.py files) refers utility programs in the src directory and NEURON models in the model directory.
+Simulation and analyses are conducted on the base directory. Executable programs (main_xxx.py files) refers utility programs in the src directory and NEURON models in the model directory.
+
+
+#### .py files to check when starting a simulation
+
+| .py file | functions |
+| -------- | -------- |
+| **`main_current.py`** | It simulates SIC, BAC, and the SIC during local application of TTX to the soma. |
+| **`configuration.py`** | It defines basic parameters. It also produces a series of the dict variable required for each run. The dict varible is read by the function "create_simulation". |
+| **`main_check_channel_distribution.py`**| It visualizes Na and Cation channel distribution. |
+| **`main_check_loc_distance.py`**| It was used to determine current injection sites along the apical trunk. |
+
+
 
 #### Directories
 | directory | contents |
@@ -22,18 +34,11 @@ Simulation and analyses are conducted on the base directory. Executable programs
 | **`model`**| Neuron models |
 | **`x86_64`**| NEURON simulation complied for the neuron models (linux) |
 
-#### .py files to check when starting a simulation
-
-| .py file | functions |
-| -------- | -------- |
-| **`main_current.py`** | It simulates SIC, BAC, and the SIC during local application of TTX to the soma. |
-| **`configuration.py`** | It defines basic parameters. It also produces a series of the dict variable required for each run. The dict varible is read by  |
-| **`main_check_channel_distribution.py`**| It visualizes Na and Cation channel distribution. |
 
 "main_current.py" calls the function "create_simulation" located in "src/model_simulation.py". The "create_simulation"  function accepts the following dict variable, builds a neuron model, run simulation, and save simulation results.
 
 
-#### Dict variable arg for "create_simulation"
+#### Dict variable for "create_simulation" (argument)
 
 | key | value type | description |
 | -------- | -------- | -------- |

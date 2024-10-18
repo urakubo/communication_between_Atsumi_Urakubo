@@ -1,3 +1,6 @@
+
+# python -i main_check_channel_distribution.py
+
 import os, sys, copy
 import numpy as np
 
