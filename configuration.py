@@ -20,23 +20,23 @@ def set_params(sim_type, dist_id):
 	p['i_dend_sec_id'] = p['i_dend_sec_ids'][ dist_id ]
 	p['i_dend_seg']    = p['i_dend_segs'][ dist_id ]
 	
-	if p['dist_id'] in [10, 11]:
-		p['amps'] = [0.01 * i for i in range(0,30)] # i = 10 (1100 um)
+	if dist_id in [10, 11]:
+		p['amps'] = [0.01 * i for i in range(0,30)] # dist_id = 10 (1100 um)
 		p['Vth']  = -20		
-	elif p['dist_id'] in [7, 8, 9]:
-		p['amps'] = [0.01 * i for i in range(0,40)] # i = 7 (800 um), 8 (900 um), 9 (1000 um) 
+	elif dist_id in [7, 8, 9]:
+		p['amps'] = [0.01 * i for i in range(0,40)] # dist_id = 7 (800 um), 8 (900 um), 9 (1000 um) 
 		p['Vth']  = -20		
-	elif p['dist_id'] in [6]:
-		p['amps'] = [0.02 * i for i in range(0,30)] # i = 6 (700 um),
+	elif dist_id in [6]:
+		p['amps'] = [0.02 * i for i in range(0,30)] # dist_id = 6 (700 um),
 		p['Vth']  = -20		
-	elif p['dist_id'] in [4, 5]:
-		p['amps'] = [0.02 * i for i in range(10,40)] # i = 4 (500 um), 5 (600 um)
+	elif dist_id in [4, 5]:
+		p['amps'] = [0.02 * i for i in range(10,40)] # dist_id = 4 (500 um), 5 (600 um)
 		p['Vth']  = -20		
-	elif p['dist_id'] in [2,3]:
-		p['amps'] = [0.02 * i for i in range(20,50)] # i = 3 (400 um),  2 (300 um),  1 (200 um),  0 (100 um),
+	elif dist_id in [2,3]:
+		p['amps'] = [0.02 * i for i in range(20,50)] # dist_id = 3 (400 um),  2 (300 um),
 		p['Vth']  = -20
-	elif p['dist_id'] in [0,1]:
-		p['amps'] = [0.02 * i for i in range(20,50)] # i = 3 (400 um),  2 (300 um),  1 (200 um),  0 (100 um),
+	elif dist_id in [0,1]:
+		p['amps'] = [0.02 * i for i in range(20,50)] # dist_id = 1 (200 um),  0 (100 um),
 		p['Vth']  = -40
 	
 	p['sim_type'] = sim_type
@@ -49,7 +49,7 @@ def set_params(sim_type, dist_id):
 		p['i_soma_amps']     = {'soma_only': -0.5, 'dend_only': 0        , 'sic': -0.5 }
 		p['i_soma_duration'] = 150
 		p['apply_soma_ttx']  = False
-
+		
 	elif sim_type == 'ttx':
 		p['dir_data']        = 'data_I_ttx'
 		p['dir_imgs']        = 'imgs_I_ttx'
@@ -59,6 +59,7 @@ def set_params(sim_type, dist_id):
 		p['i_soma_amps']     = {'soma_only': -0.5, 'dend_only': 0        , 'sic': -0.5 }
 		p['i_soma_duration'] = 150
 		p['apply_soma_ttx']  = True
+		
 	elif sim_type == 'bac':
 		p['dir_data']        = 'data_I_bac'
 		p['dir_imgs']        = 'imgs_I_bac'
@@ -75,7 +76,7 @@ def set_params(sim_type, dist_id):
 	
 	# Simulation time
 	p['time_prerun']                     = 550
-	p['time_run_after_prerun']           = 350
+	p['time_run_after_prerun']           = 400
 	p['time_onset_for_v_peak_detection_after_prerun'] = -100
 	
 	return p
@@ -88,7 +89,6 @@ def set_args_for_each_run(p):
 	a['i_soma_duration'] = p['i_soma_duration']
 	a['apply_soma_ttx']  = p['apply_soma_ttx']
 	
-	#a['dist']            = p['dist']
 	a['i_dend_sec_id']   = p['i_dend_sec_id']
 	a['i_dend_seg']      = p['i_dend_seg']
 	
