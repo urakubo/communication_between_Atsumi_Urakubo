@@ -7,7 +7,7 @@ coreneuron.enable = True
 h.load_file("import3d.hoc")
 #h.load_file("printCell.hoc")
 
-import bin.model_simulation as m
+import src.model_simulation as m
 
 
 	

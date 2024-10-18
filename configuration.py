@@ -1,5 +1,5 @@
 import os, sys
-import bin.utils as u
+import src.utils as u
 
 
 def set_params(sim_type, dist_id):

@@ -8,8 +8,8 @@ h.load_file("import3d.hoc")
 #h.load_file("printCell.hoc")
 
 
-import bin.utils as u
-import bin.utils_graph as u_graph
+import src.utils as u
+import src.utils_graph as u_graph
 
 
 def apply_soma_ttx(cell):

@@ -4,9 +4,9 @@ import numpy as np
 from multiprocessing import Pool, cpu_count
 
 import configuration as c
-import bin.utils as u
-import bin.utils_graph as u_graph
-import bin.model_simulation as m
+import src.utils as u
+import src.utils_graph as u_graph
+import src.model_simulation as m
 
 
 if __name__ == "__main__":

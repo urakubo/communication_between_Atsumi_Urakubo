@@ -2,7 +2,7 @@ import os, sys, glob, pickle
 import numpy as np
 
 
-import bin.utils as u
+import src.utils as u
 import configuration as c
 
 import matplotlib.pyplot as plt
