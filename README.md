@@ -4,9 +4,9 @@
 
 # Communication between Atsumi and Urakubo
 
-[](
+<!--
 Simulation code for "Somatic inhibition-Induced Ca2+ spike (SIC)"
-)
+-->
 
 
 The GitHub repository contains simulation and analysis programs for the study "XXXX" by Atsumi et al. [1].
