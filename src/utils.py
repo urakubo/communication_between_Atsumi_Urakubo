@@ -38,12 +38,12 @@ class RepeatHandler():
 		pass
 	def get_filename_simdata(self):
 		return self.dir_data + os.sep + \
-					'distid{}_mode_{}_dend_Idelay{}_dend_Iamp{:.2f}'.\
-					format( self.dist_id, self.mode, str(self.i_dend_delay).replace('-','m'), self.i_dend_amp )
+				'distid{}_mode_{}_dend_Idelay{}_dend_Iamp{:.2f}'.\
+				format( self.dist_id, self.mode, str(self.i_dend_delay).replace('-','m'), self.i_dend_amp )
 	def get_filename_fig(self):
 		return self.dir_imgs + os.sep + \
-					'distid{}_mode_{}_dend_Idelay{}'.\
-					format( self.dist_id, self.mode, str(self.i_dend_delay).replace('-','m') )
+				'distid{}_mode_{}_dend_Idelay{}'.\
+				format( self.dist_id, self.mode, str(self.i_dend_delay).replace('-','m') )
 
 
 class WrappedAs(RepeatHandler):
