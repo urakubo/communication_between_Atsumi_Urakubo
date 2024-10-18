@@ -2,7 +2,12 @@
 ![System requirements](https://img.shields.io/badge/platform-win%2064,%20linux%2064-green.svg)
 [![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
+# Communication between Atsumi and Urakubo
+
+[](
 # Simulation code for "Somatic inhibition-Induced Ca2+ spike (SIC)"
+)
+
 
 The GitHub repository contains simulation and analysis programs for the study "XXXX" by Atsumi et al. [1].
 All programs are written in Python3.8 (Windows/Linux) and designed for the simulation on the NEURON simulator [2].
