@@ -110,7 +110,7 @@ class PlotProfiles(u.RepeatHandler):
 	def preprocessing_dend_amp(self):
 		self.recs = {}
 		self.i   = 0
-		# print("self.p['i_dend_amps'][self.mode]", self.p['i_dend_amps'][self.mode])
+		# print("self.p['i_dend_amps'][self.stim_type]", self.p['i_dend_amps'][self.stim_type])
 	def function(self):
 		self.recs[self.i]   = u.load(self.get_filename_simdata())
 		self.i += 1
@@ -123,8 +123,8 @@ class PlotProfiles(u.RepeatHandler):
 
 def plot_i_v2(input_amp, v_apic_max, p):
 	
-	ctl     = p['modes'][1]
-	sic_bac = p['modes'][2]
+	ctl     = p['stim_types'][1]
+	sic_bac = p['stim_types'][2]
 	dist     = p['dist']
 	Vth      = p['Vth']
 	dir_imgs = p['dir_imgs']
@@ -171,8 +171,8 @@ def plot_i_v2(input_amp, v_apic_max, p):
 
 def plot_i_v(input_amp, v_apic_max, p):
 	
-	ctl     = p['modes'][1]
-	sic_bac = p['modes'][2]
+	ctl     = p['stim_types'][1]
+	sic_bac = p['stim_types'][2]
 	
 	ctl_v_apic_max  = np.array( v_apic_max[ ctl ][0] ) # 'dend_only'
 	sics_v_apic_max = v_apic_max[ sic_bac ] # 'sic'/'bac'
@@ -216,8 +216,8 @@ def plot_Ith_for_V_timing_dependence(input_amp_th, p):
 	dir_imgs = p['dir_imgs']
 	dist_id  = p['dist_id']
 	
-	ctl      = p['modes'][1]
-	sic_bac  = p['modes'][2]
+	ctl     = p['stim_types'][1]
+	sic_bac = p['stim_types'][2]
 	Ith_ctl  = input_amp_th[ ctl ][0] # 'dend_only'
 	Ith_targ = np.array(list(input_amp_th[ sic_bac ].values()))
 	delays   = np.array(list(input_amp_th[ sic_bac ].keys()))

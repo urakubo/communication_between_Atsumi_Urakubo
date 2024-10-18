@@ -22,10 +22,10 @@ class RepeatHandler():
 		self.dir_imgs = self.p['dir_imgs']
 		self.Vth      = self.p['Vth']
 		self.preprocessing()
-		for self.mode, self.i_soma_amp in self.p['i_soma_amps'].items():
-			for self.i_dend_delay in self.p['i_dend_delays'][self.mode]:
+		for self.stim_type, self.i_soma_amp in self.p['i_soma_amps'].items():
+			for self.i_dend_delay in self.p['i_dend_delays'][self.stim_type]:
 				self.preprocessing_dend_amp()
-				for self.i_dend_amp in self.p['i_dend_amps'][self.mode]:
+				for self.i_dend_amp in self.p['i_dend_amps'][self.stim_type]:
 					self.function()
 				self.postprocessing_dend_amp()
 	def preprocessing(self):
@@ -38,12 +38,12 @@ class RepeatHandler():
 		pass
 	def get_filename_simdata(self):
 		return self.dir_data + os.sep + \
-				'distid{}_mode_{}_dend_Idelay{}_dend_Iamp{:.2f}'.\
-				format( self.dist_id, self.mode, str(self.i_dend_delay).replace('-','m'), self.i_dend_amp )
+				'distid{}_stimtype_{}_dend_Idelay{}_dend_Iamp{:.2f}'.\
+				format( self.dist_id, self.stim_type, str(self.i_dend_delay).replace('-','m'), self.i_dend_amp )
 	def get_filename_fig(self):
 		return self.dir_imgs + os.sep + \
-				'distid{}_mode_{}_dend_Idelay{}'.\
-				format( self.dist_id, self.mode, str(self.i_dend_delay).replace('-','m') )
+				'distid{}_stimtype_{}_dend_Idelay{}'.\
+				format( self.dist_id, self.stim_type, str(self.i_dend_delay).replace('-','m') )
 
 
 class WrappedAs(RepeatHandler):
@@ -66,31 +66,31 @@ class I_V(RepeatHandler):
 		RepeatHandler.__init__(self, p)
 		
 	def preprocessing(self):
-		tmp_modes   = {mode: {d: [] for d in self.p['i_dend_delays'][mode] } for mode in self.p['i_soma_amps'].keys()}
-		self.v_apic_max = copy.deepcopy(tmp_modes)
-		self.input_amp  = copy.deepcopy(tmp_modes)
-		tmp_modes   = {mode: {d: 0 for d in self.p['i_dend_delays'][mode] } for mode in self.p['i_soma_amps'].keys()}
-		self.input_amp_th  = copy.deepcopy(tmp_modes)
+		tmp_stims   = {s: {d: [] for d in self.p['i_dend_delays'][s] } for s in self.p['stim_types']}
+		self.v_apic_max = copy.deepcopy(tmp_stims)
+		self.input_amp  = copy.deepcopy(tmp_stims)
+		tmp_stims   = {s: {d: 0 for d in self.p['i_dend_delays'][s] } for s in self.p['stim_types']}
+		self.input_amp_th  = copy.deepcopy(tmp_stims)
 		
 	def function(self):
 		filename  = self.get_filename_simdata()
 		loaded = load(filename)
-		self.v_apic_max[self.mode][self.i_dend_delay].append(loaded['v_apic_max'])
-		self.input_amp[self.mode][self.i_dend_delay].append(loaded['input_amp'])
+		self.v_apic_max[self.stim_type][self.i_dend_delay].append(loaded['v_apic_max'])
+		self.input_amp[self.stim_type][self.i_dend_delay].append(loaded['input_amp'])
 
 	def postprocessing_dend_amp(self):
-		I_dend = np.array( self.input_amp[self.mode][self.i_dend_delay] )
-		V_dend = np.array( self.v_apic_max[self.mode][self.i_dend_delay] )
+		I_dend = np.array( self.input_amp[self.stim_type][self.i_dend_delay] )
+		V_dend = np.array( self.v_apic_max[self.stim_type][self.i_dend_delay] )
 		Vth    = self.Vth
 		#print("V_dend ", V_dend )
 		#print("V_dend - Vth ", V_dend - Vth)
 		if np.all(V_dend - Vth < 0) or np.all(V_dend - Vth >= 0):
-			self.input_amp_th[self.mode][self.i_dend_delay] = None
+			self.input_amp_th[self.stim_type][self.i_dend_delay] = None
 		else:
 			id  = np.where((V_dend - Vth > 0))[0][0]
 			I1  = I_dend[id]
 			I0  = I_dend[id-1]
 			V1  = V_dend[id]
 			V0  = V_dend[id-1]
-			self.input_amp_th[self.mode][self.i_dend_delay] = ( I1*(Vth-V0) + I0*(V1-Vth) ) / (V1 - V0)
+			self.input_amp_th[self.stim_type][self.i_dend_delay] = ( I1*(Vth-V0) + I0*(V1-Vth) ) / (V1 - V0)
 

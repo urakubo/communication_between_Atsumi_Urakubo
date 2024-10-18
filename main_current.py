@@ -12,10 +12,10 @@ import src.model_simulation as m
 if __name__ == "__main__":
 	
 	
-	sim_type = 'sic' # 'sic', 'bac', 'ttx'
-	dist_id  = 7     # 0, ..., 11
+	mode    = 'sic' # 'sic', 'bac', 'ttx'
+	dist_id = 7     # 0, ..., 11
 	
-	p            = c.set_params(sim_type, dist_id)
+	p            = c.set_params(mode, dist_id)
 	wrapped_args = c.set_args_for_each_run(p)
 	
 	'''
@@ -53,7 +53,7 @@ if __name__ == "__main__":
 	
 	
 	# Get peak amplitudes of dendirtic membrane potentials
-	filename_data = p['dir_data'] + os.sep + 'distid_{}_simtype_{}'.format(dist_id, sim_type )
+	filename_data = p['dir_data'] + os.sep + 'distid_{}_mode_{}'.format(dist_id, mode )
 	#'''
 	g2 = u.I_V( p )
 	g2.run()

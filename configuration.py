@@ -2,7 +2,7 @@ import os, sys
 import src.utils as u
 
 
-def set_params(sim_type, dist_id):
+def set_params(mode, dist_id):
 	
 	# Shared model parameters 
 	p = {}
@@ -39,39 +39,39 @@ def set_params(sim_type, dist_id):
 		p['amps'] = [0.02 * i for i in range(20,50)] # dist_id = 1 (200 um),  0 (100 um),
 		p['Vth']  = -40
 	
-	p['sim_type'] = sim_type
-	if  sim_type == 'sic':
+	p['mode'] = mode
+	if  mode == 'sic':
 		p['dir_data']        = 'data_I'
 		p['dir_imgs']        = 'imgs_I'
-		p['modes']           = ['soma_only', 'dend_only', 'sic']
-		p['i_dend_delays']   = {'soma_only': [0],  'dend_only': [0]      , 'sic':list(range(-80, 90, 10)) }
-		p['i_dend_amps']     = {'soma_only': [0],  'dend_only': p['amps'], 'sic':p['amps'] }
-		p['i_soma_amps']     = {'soma_only': -0.5, 'dend_only': 0        , 'sic': -0.5 }
+		p['stim_types']      = ['soma_only', 'dend_only', 'soma_and_dend']
+		p['i_dend_delays']   = {'soma_only': [0],  'dend_only': [0]      , 'soma_and_dend':list(range(-80, 90, 10)) }
+		p['i_dend_amps']     = {'soma_only': [0],  'dend_only': p['amps'], 'soma_and_dend':p['amps'] }
+		p['i_soma_amps']     = {'soma_only': -0.5, 'dend_only': 0        , 'soma_and_dend': -0.5 }
 		p['i_soma_duration'] = 150
 		p['apply_soma_ttx']  = False
 		
-	elif sim_type == 'ttx':
+	elif mode == 'ttx':
 		p['dir_data']        = 'data_I_ttx'
 		p['dir_imgs']        = 'imgs_I_ttx'
-		p['modes']           = ['soma_only', 'dend_only', 'sic']
-		p['i_dend_delays']   = {'soma_only': [0],  'dend_only': [0]      , 'sic':list(range(-80, 90, 10)) }
-		p['i_dend_amps']     = {'soma_only': [0],  'dend_only': p['amps'], 'sic':p['amps'] }
-		p['i_soma_amps']     = {'soma_only': -0.5, 'dend_only': 0        , 'sic': -0.5 }
+		p['stim_types']      = ['soma_only', 'dend_only', 'soma_and_dend']
+		p['i_dend_delays']   = {'soma_only': [0],  'dend_only': [0]      , 'soma_and_dend':list(range(-80, 90, 10)) }
+		p['i_dend_amps']     = {'soma_only': [0],  'dend_only': p['amps'], 'soma_and_dend':p['amps'] }
+		p['i_soma_amps']     = {'soma_only': -0.5, 'dend_only': 0        , 'soma_and_dend': -0.5 }
 		p['i_soma_duration'] = 150
 		p['apply_soma_ttx']  = True
 		
-	elif sim_type == 'bac':
+	elif mode == 'bac':
 		p['dir_data']        = 'data_I_bac'
 		p['dir_imgs']        = 'imgs_I_bac'
-		p['modes']           = ['soma_only', 'dend_only', 'bac']
-		p['i_dend_delays']   = {'soma_only': [0], 'dend_only': [0]      , 'bac':list(range(-80, 90, 10)) }
-		p['i_dend_amps']     = {'soma_only': [0], 'dend_only': p['amps'], 'bac':p['amps'] }
-		p['i_soma_amps']     = {'soma_only': 1.4, 'dend_only': 0        , 'bac': 1.4 }
+		p['stim_types']      = ['soma_only', 'dend_only', 'soma_and_dend']
+		p['i_dend_delays']   = {'soma_only': [0], 'dend_only': [0]      , 'soma_and_dend':list(range(-80, 90, 10)) }
+		p['i_dend_amps']     = {'soma_only': [0], 'dend_only': p['amps'], 'soma_and_dend':p['amps'] }
+		p['i_soma_amps']     = {'soma_only': 1.4, 'dend_only': 0        , 'soma_and_dend': 1.4 }
 		p['i_soma_duration'] = 5
 		p['apply_soma_ttx']  = False
 		# 1.4 somatic spiking, 1.3 nA ... non somatic spiking.
 	else :
-		print('Invalid sim_type: ', sim_type)
+		print('Invalid mode: ', mode)
 		sys.exit(1)
 	
 	# Simulation time
