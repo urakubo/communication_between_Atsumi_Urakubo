@@ -5,7 +5,7 @@
 # Communication between Atsumi and Urakubo
 
 [](
-# Simulation code for "Somatic inhibition-Induced Ca2+ spike (SIC)"
+Simulation code for "Somatic inhibition-Induced Ca2+ spike (SIC)"
 )
 
 
