@@ -1,7 +1,8 @@
 import os, sys, copy, pprint
 import numpy as np
 
-from neuron import h, gui
+from neuron import h
+h.load_file("stdrun.hoc")
 from neuron import coreneuron
 coreneuron.enable = True
 h.load_file("import3d.hoc")
