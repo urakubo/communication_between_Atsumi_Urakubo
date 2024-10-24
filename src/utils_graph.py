@@ -11,7 +11,15 @@ import matplotlib.pyplot as plt
 plt.rcParams.update( c.rc_param )
 
 
-def initialize_fig_panel_profile(ax, ylabel='Membrane pot (mV)'):
+
+def savefig_showfig(filename, dir_imgs = ''):
+	plt.savefig(os.path.join(dir_imgs, filename + '.pdf'))
+	plt.savefig(os.path.join(dir_imgs, filename + '.png'), dpi=300)
+	plt.show(block=False)
+	plt.pause(2)
+	plt.close()
+	
+def initialize_fig_panel_profile(ax, ylabel):
 	ax.spines['right'].set_visible(False)
 	ax.spines['top'].set_visible(False)
 	ax.set_xlabel('Time (ms)')
@@ -40,46 +48,47 @@ def plot_profile(filename, recs, p, i_delay):
 	time_run    = p['time_run_after_prerun']
 	dist        = p['dist']
 	
-	## Plot membrane potential during simulation
+	## Preparation of plot panels
 	height_ratios = [1,1,3,3]
 	nrows = len(height_ratios)
 	fig   = plt.figure(constrained_layout=True, figsize=(4.0, 8.0))
 	spec  = fig.add_gridspec(ncols=1, nrows=nrows, height_ratios=height_ratios)
 	axs   = [fig.add_subplot(spec[i, 0]) for i in range(nrows)]
-	fig.suptitle(  'Distance from soma {} um\nT(start,Idend)- T(end,Isoma) = {} ms'.format(
-                str(dist), str(i_delay)) )
+	fig.suptitle(  'Distance from soma: {:.0f} um\nT(start,Idend)- T(end,Isoma) = {} ms'.format(
+                dist, str(i_delay)) )
 	
 	xmin = -50 # -time_prerun
 	xmax = time_run
 	
-	binsize = 2
-	ylabel  = '(nA)'
-	
-	ax = axs[0]
-	ax.set_title('Current injection (dend)')
-	initialize_fig_panel_profile(ax, ylabel=ylabel)
-	ax.set_xlim([xmin, xmax])
-	ax.set_ylim([-0.1, 1.1])
-	
-	ax = axs[1]
-	ax.set_title('Current injection (soma)')
-	initialize_fig_panel_profile(ax, ylabel=ylabel)
-	ax.set_xlim([xmin, xmax])
-	ax.set_ylim([-0.8, 0.2])
-	
-	ax = axs[2]
-	ax.set_title('Membrane potential (dend)')
-	initialize_fig_panel_profile(ax)
-	ax.set_xlim([xmin, xmax])
-	ax.set_ylim([-120, 50])
-	ax.set_yticks(np.arange(-100, 40, 40))
-	
-	ax = axs[3]
-	ax.set_title('Membrane potential (soma)')
-	initialize_fig_panel_profile(ax)
-	ax.set_xlim([xmin, xmax])
-	ax.set_ylim([-120, 50])
-	ax.set_yticks(np.arange(-100, 40, 40))
+	titles  = ['Current injection (dend)',
+		  'Current injection (soma)',
+		  'Membrane potential (dend)',
+		  'Membrane potential (soma)'
+		 ]
+	ylabels = ['(nA)',
+                   '(nA)',
+                   'Membrane pot (mV)',
+                   'Membrane pot (mV)'
+		 ]
+	ylims   = [[-0.1, 1.1],
+                   [-0.8, 0.2],
+                   [-120, 50],
+                   [-120, 50]
+		 ]
+	yticks = [[0,1],
+                  [-0.5,0],
+                  np.arange(-100, 40, 40),
+                  np.arange(-100, 40, 40)
+		 ]
+
+	for i in range(4):
+		ax = axs[i]
+		ax.set_title(titles[i])
+		initialize_fig_panel_profile(ax, ylabel=ylabels[i])
+		ax.set_xlim([xmin, xmax])
+		ax.set_ylim(ylims[i])
+		ax.set_yticks(yticks[i])
+        
 	
 	cmap     = plt.get_cmap("jet")
 	#cmap = plt.get_cmap("Blues")
@@ -90,18 +99,12 @@ def plot_profile(filename, recs, p, i_delay):
 		col = cmap( int(i) / cmap_max )
 		axs[0].plot(v['t'] - time_prerun, v['i_dend'], color=col, linewidth = lw )
 		axs[1].plot(v['t'] - time_prerun, v['i_soma'], color=col, linewidth = lw )
-		axs[2].plot(v['t'] - time_prerun, v['v_apic'], color=col, linewidth = lw)
-		axs[3].plot(v['t'] - time_prerun, v['v_soma'], color=col, linewidth = lw)
+		axs[2].plot(v['t'] - time_prerun, v['v_apic'], color=col, linewidth = lw )
+		axs[3].plot(v['t'] - time_prerun, v['v_soma'], color=col, linewidth = lw )
 	
 	
 	#ax.legend(frameon=False)
-	
-	plt.savefig(filename + '.pdf')
-	plt.savefig(filename + '.png', dpi=300)
-	#plt.show()
-	plt.show(block=False)
-	plt.pause(2)
-	plt.close()
+	savefig_showfig(filename)
 	
 	
 class PlotProfiles(u.RepeatHandler):
@@ -162,11 +165,7 @@ def plot_i_v2(input_amp, v_apic_max, p):
 		#ax.legend()
 	
 	filename =   'distid{}_i_v'.format( dist_id )
-	plt.savefig(os.path.join(dir_imgs, filename + '.pdf'))
-	plt.savefig(os.path.join(dir_imgs, filename + '.png'), dpi=300)
-	plt.show(block=False)
-	plt.pause(2)
-	plt.close()
+	savefig_showfig(filename, dir_imgs)
 
 
 def plot_i_v(input_amp, v_apic_max, p):
@@ -201,12 +200,8 @@ def plot_i_v(input_amp, v_apic_max, p):
 		ax.set_ylim([-80, 40])
 		ax.legend()
 		filename =  'distid{}_delay{}_i_v'.format( dist_id, str(i_delay).replace('-','m') )
-		plt.savefig(os.path.join(dir_imgs, filename + '.pdf'))
-		plt.savefig(os.path.join(dir_imgs, filename + '.png'), dpi=300)
-		#plt.show()
-		plt.show(block=False)
-		plt.pause(2)
-		plt.close()
+		savefig_showfig(filename, dir_imgs)
+
 
 
 def plot_Ith_for_V_timing_dependence(input_amp_th, p):
@@ -221,7 +216,10 @@ def plot_Ith_for_V_timing_dependence(input_amp_th, p):
 	Ith_ctl  = input_amp_th[ ctl ][0] # 'dend_only'
 	Ith_targ = np.array(list(input_amp_th[ sic_bac ].values()))
 	delays   = np.array(list(input_amp_th[ sic_bac ].keys()))
-	
+
+	print('Ith_ctl : ', Ith_ctl )
+	print('Ith_targ: ', Ith_targ )
+	print('delays  : ', delays )
 	
 	x_lim = [np.min(delays)*1.1, np.max(delays)*1.1]
 	y_lim = [-80, 80]
@@ -240,11 +238,7 @@ def plot_Ith_for_V_timing_dependence(input_amp_th, p):
 				'o-', markersize=5, color='k', markerfacecolor='k', markeredgecolor="k" )
 	
 	filename =   'dist_{}_Ith_for_V_timing_dependence'.format( dist_id )
-	plt.savefig(os.path.join(dir_imgs, filename + '.pdf'))
-	plt.savefig(os.path.join(dir_imgs, filename + '.png'), dpi=300)
-	plt.show(block=False)
-	plt.pause(2)
-	plt.close()
+	savefig_showfig(filename, dir_imgs)
 	
 
 	
@@ -270,11 +264,7 @@ def plot_distance_Ih(dir_imgs, func, label):
 	ax.legend()
 	
 	filename = 'distrib_Ih'
-	plt.savefig(os.path.join(dir_imgs, filename + '.pdf'))
-	plt.savefig(os.path.join(dir_imgs, filename + '.png'), dpi=300)
-	plt.show(block=False)
-	plt.pause(2)
-	plt.close()
+	savefig_showfig(filename, dir_imgs)
 	
 	
 	
