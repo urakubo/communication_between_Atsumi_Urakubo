@@ -30,13 +30,16 @@ def set_params(mode, dist_id):
 		p['amps'] = [0.02 * i for i in range(0,30)] # dist_id = 6 (700 um),
 		p['Vth']  = -20		
 	elif dist_id in [4, 5]:
-		p['amps'] = [0.02 * i for i in range(10,40)] # dist_id = 4 (500 um), 5 (600 um)
+		#p['amps'] = [0.02 * i for i in range(10,40)] # dist_id = 4 (500 um), 5 (600 um)
+		p['amps'] = [0.02 * i for i in range(0,40)] # dist_id = 4 (500 um), 5 (600 um)
 		p['Vth']  = -20		
 	elif dist_id in [2,3]:
-		p['amps'] = [0.02 * i for i in range(20,50)] # dist_id = 3 (400 um),  2 (300 um),
+		#p['amps'] = [0.02 * i for i in range(20,50)] # dist_id = 3 (400 um),  2 (300 um),
+		p['amps'] = [0.02 * i for i in range(0,50)] # dist_id = 3 (400 um),  2 (300 um),
 		p['Vth']  = -20
 	elif dist_id in [0,1]:
-		p['amps'] = [0.02 * i for i in range(20,50)] # dist_id = 1 (200 um),  0 (100 um),
+		#p['amps'] = [0.02 * i for i in range(20,50)] # dist_id = 1 (200 um),  0 (100 um),
+		p['amps'] = [0.02 * i for i in range(0,50)] # dist_id = 1 (200 um),  0 (100 um),
 		p['Vth']  = -40
 	
 	p['mode'] = mode
@@ -69,10 +72,10 @@ def set_params(mode, dist_id):
 		p['stim_types']      = ['soma_only', 'dend_only', 'soma_and_dend']
 		p['i_dend_delays']   = {'soma_only': [0], 'dend_only': [0]      , 'soma_and_dend':list(range(-80, 90, 10)) }
 		p['i_dend_amps']     = {'soma_only': [0], 'dend_only': p['amps'], 'soma_and_dend':p['amps'] }
-		p['i_soma_amps']     = {'soma_only': 1.4, 'dend_only': 0        , 'soma_and_dend': 1.4 }
+		p['i_soma_amps']     = {'soma_only': 1.5, 'dend_only': 0        , 'soma_and_dend': 1.5 }
 		p['i_soma_duration'] = 5
 		p['apply_soma_ttx']  = False
-		# 1.4 somatic spiking, 1.3 nA ... non somatic spiking.
+		# Shai2015 1.4 somatic spiking, 1.3 nA ... non somatic spiking.
 	else :
 		print('Invalid mode: ', mode)
 		sys.exit(1)
