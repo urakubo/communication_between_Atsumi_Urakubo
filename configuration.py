@@ -43,6 +43,7 @@ def set_params(mode, dist_id):
 	if  mode == 'sic':
 		p['dir_data']        = 'data_I'
 		p['dir_imgs']        = 'imgs_I'
+		p['dir_imgs_summary']= 'imgs_I_summary'
 		p['stim_types']      = ['soma_only', 'dend_only', 'soma_and_dend']
 		p['i_dend_delays']   = {'soma_only': [0],  'dend_only': [0]      , 'soma_and_dend':list(range(-80, 90, 10)) }
 		p['i_dend_amps']     = {'soma_only': [0],  'dend_only': p['amps'], 'soma_and_dend':p['amps'] }
@@ -53,6 +54,7 @@ def set_params(mode, dist_id):
 	elif mode == 'ttx':
 		p['dir_data']        = 'data_I_ttx'
 		p['dir_imgs']        = 'imgs_I_ttx'
+		p['dir_imgs_summary']= 'imgs_I_ttx_summary'
 		p['stim_types']      = ['soma_only', 'dend_only', 'soma_and_dend']
 		p['i_dend_delays']   = {'soma_only': [0],  'dend_only': [0]      , 'soma_and_dend':list(range(-80, 90, 10)) }
 		p['i_dend_amps']     = {'soma_only': [0],  'dend_only': p['amps'], 'soma_and_dend':p['amps'] }
@@ -63,6 +65,7 @@ def set_params(mode, dist_id):
 	elif mode == 'bac':
 		p['dir_data']        = 'data_I_bac'
 		p['dir_imgs']        = 'imgs_I_bac'
+		p['dir_imgs_summary']= 'imgs_I_bac_summary'
 		p['stim_types']      = ['soma_only', 'dend_only', 'soma_and_dend']
 		p['i_dend_delays']   = {'soma_only': [0], 'dend_only': [0]      , 'soma_and_dend':list(range(-80, 90, 10)) }
 		p['i_dend_amps']     = {'soma_only': [0], 'dend_only': p['amps'], 'soma_and_dend':p['amps'] }

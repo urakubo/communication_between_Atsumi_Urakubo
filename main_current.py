@@ -9,13 +9,6 @@ import src.utils as u
 import src.utils_graph as u_graph
 import src.model_simulation as m
 
-'''
-def worker_q(input_q, output_q):
-	for arg in iter(input_q.get, 'STOP'):
-		result = m.create_simulation(arg)
-		output_q.put(result)
-	print('Get STOP singal.')
-'''
 
 if __name__ == "__main__":
 	
@@ -91,23 +84,4 @@ if __name__ == "__main__":
 		u_graph.plot_i_v2(input_amp, v_apic_max, p)
 		#u_graph.plot_Ith_for_V_timing_dependence(input_amp_th, p)
 	'''
-	
-        
-	'''
-	freeze_support()
-	input_q   = Queue()
-	output_q  = Queue()
-	for arg in wrapped_args:
-		input_q.put( arg )
-	num_cpu = 30
-	for i in range(num_cpu):
-		p = Process( target=worker_q, args=(input_q, output_q)).start()
-		p.start()
-	print('Results:')
-	for i in range(len(wrapped_args)):
-		print( '\t', output_q.get() )
-	for i in range(num_cpu):
-		input_q.put('STOP')
 
-	p.join()
-	'''

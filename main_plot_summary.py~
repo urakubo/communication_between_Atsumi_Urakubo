@@ -10,6 +10,71 @@ import matplotlib.pyplot as plt
 # Matplotlib
 plt.rcParams.update( c.rc_param )
 
+
+class ImageStackHandler():
+    def init_panel_rows(self, axes, row, dist, x_lim, y_lim, yticks, xlabel = 'Time (ms)' ):
+        ax = axes[row]
+        ax.spines['right'].set_visible(False)
+        ax.spines['top'].set_visible(False)
+        ax.set_yticks( yticks )
+        ax.set_title('{:.0f} um'.format(dist), loc='right', y = 0.6)
+        ax.set_xlim(x_lim)
+        ax.set_ylim(y_lim)
+        if row != axes.shape[0]-1:
+            ax.spines['bottom'].set_visible(False)
+            ax.axes.xaxis.set_ticklabels([])
+            ax.set_xticks([])
+        else:
+            ax.set_xlabel(xlabel)
+        return ax
+            
+    def __init__(self, p, dist_ids):
+        self.p = p
+        self.nrows = len( dist_ids )
+        self.wspace, self.hspace = 0.2, -0.02
+        self.figsize = (5.0, 10.0)
+        self.dist_ids
+
+    def create_fig(self):
+        self.fig, self.axes= plt.subplots( self.nrows, 1, figsize=self.figsize )
+        left, right, bottom, top = 0.15, 0.9, 0.1, 0.9
+        plt.subplots_adjust(left, bottom, right, top, self.wspace, self.hspace)
+
+        for i, dist_id in enumerate( dist_ids ):
+            row  = nrows - i - 1
+            ax = axes[row]
+
+        
+        self.dist_id  = self.p['dist_id']
+	self.dir_data = self.p['dir_data']
+	self.dir_imgs = self.p['dir_imgs']
+	self.Vth      = self.p['Vth']
+	self.preprocessing()
+	for self.stim_type, self.i_soma_amp in self.p['i_soma_amps'].items():
+	    for self.i_dend_delay in self.p['i_dend_delays'][self.stim_type]:
+		self.preprocessing_dend_amp()
+		for self.i_dend_amp in self.p['i_dend_amps'][self.stim_type]:
+		    self.function()
+		self.postprocessing_dend_amp()
+    def preprocessing(self):
+	pass
+    def preprocessing_dend_amp(self):
+	pass
+    def function(self):
+	pass
+    def postprocessing_dend_amp(self):
+	pass
+    def get_filename_simdata(self):
+	return self.dir_data + os.sep + \
+	    'distid{}_stimtype_{}_dend_Idelay{}_dend_Iamp{:.2f}'.\
+	    format( self.dist_id, self.stim_type, str(self.i_dend_delay).replace('-','m'), self.i_dend_amp )
+    def get_filename_fig(self):
+	return self.dir_imgs + os.sep + \
+	    'distid{}_stimtype_{}_dend_Idelay{}'.\
+	    format( self.dist_id, self.stim_type, str(self.i_dend_delay).replace('-','m') )
+
+
+
 def plot_Ith_timing_dependence(dist_ids, p):
     #'''	
     ctl  = p['stim_types'][1]
@@ -18,14 +83,15 @@ def plot_Ith_timing_dependence(dist_ids, p):
     Iths_targ  = {}
     Iths_delay = {}
     for dist_id in dist_ids:
-        filename_data = p['dir_data'] + os.sep + 'distid_{}_mode_{}'.format(dist_id, mode )
+        filename_data = p['dir_data'] + os.sep + 'distid_{}_mode_{}'.format(dist_id, mode)
         input_amp, v_apic_max, input_amp_th = u.load(filename_data)
         Iths_ctl[dist_id]  = list(input_amp_th[ctl].values())[0]
         Iths_targ[dist_id] = list(input_amp_th[targ].values())
         Iths_delay[dist_id] = list(input_amp_th[targ].keys())
     
     
-    dir_imgs = p['dir_imgs']
+    dir_imgs = p['dir_imgs_summary']
+    os.makedirs(dir_imgs, exist_ok=True)
     filename = 'test'
 
     y_lim = [-35, 35]
@@ -64,29 +130,9 @@ def plot_Ith_timing_dependence(dist_ids, p):
         ax.plot( delays, (Ith_targ - Ith_ctl)/Ith_ctl * 100,
 				'o-', markersize=5, color='k', markerfacecolor='k', markeredgecolor="k" )
 
-    plt.savefig(os.path.join(dir_imgs, filename + '.pdf'))
-    plt.savefig(os.path.join(dir_imgs, filename + '.png'), dpi=300)
-    plt.show(block=False)
-    plt.pause(2)
-    plt.close()
+    u_graph.savefig_showfig(filename, dir_imgs)
     
 
-def init_panel_rows(axes, row, dist, x_lim, y_lim, yticks, xlabel = 'Time (ms)' ):
-    ax = axes[row]
-    ax.spines['right'].set_visible(False)
-    ax.spines['top'].set_visible(False)
-    ax.set_yticks( yticks )
-    ax.set_title('{:.0f} um'.format(dist), loc='right', y = 0.6)
-    ax.set_xlim(x_lim)
-    ax.set_ylim(y_lim)
-    if row != axes.shape[0]-1:
-        ax.spines['bottom'].set_visible(False)
-        ax.axes.xaxis.set_ticklabels([])
-        ax.set_xticks([])
-    else:
-        ax.set_xlabel(xlabel)
-    return ax
-            
     
 if __name__ == "__main__":
 	
@@ -96,14 +142,14 @@ if __name__ == "__main__":
     num_cpu = 32
     p = c.set_params(mode, dist_id)
 
-    '''
     dist_ids = list(range(2,12))
     plot_Ith_timing_dependence(dist_ids, p)
-    '''
-    
+
+    '''    
     dist_ids = list(range(0,12))
     filename = 'membrane_pot'    
-    dir_imgs    = p['dir_imgs']
+    dir_imgs    = p['dir_imgs_summary']
+    os.makedirs(dir_imgs, exist_ok=True)
     dir_data    = p['dir_data']
     time_prerun = p['time_prerun'] + 150
     time_run    = p['time_run_after_prerun'] -150
@@ -145,13 +191,9 @@ if __name__ == "__main__":
     ax.plot( t_soma-time_prerun, v_soma,'k-', linewidth =1 )
     
     
-    plt.savefig(os.path.join(dir_imgs, filename + '.pdf'))
-    plt.savefig(os.path.join(dir_imgs, filename + '.png'), dpi=300)
-    #plt.show(block=False)
-    #plt.pause(2)
-    plt.show()
-    plt.close()
+    u_graph.savefig_showfig(filename, dir_imgs)
     
+    '''
 
 
     '''
