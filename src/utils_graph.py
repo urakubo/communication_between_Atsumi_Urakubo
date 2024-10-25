@@ -101,7 +101,6 @@ class PlotProfiles(u.RepeatHandler):
 		plot_profile(self.get_filename_fig(), self.recs, self.p, self.i_dend_delay )
 
 
-
 def plot_i_v_summary(input_amp, v_apic_max, p):
 	
 	ctl     = p['stim_types'][1]
@@ -149,11 +148,11 @@ def plot_i_v_summary(input_amp, v_apic_max, p):
 
 def plot_i_v(input_amp, v_apic_max, p):
 	
-	ctl     = p['stim_types'][1]
-	sic_bac = p['stim_types'][2]
+	ctl  = p['stim_types'][1]
+	targ = p['stim_types'][2]
 	
 	ctl_v_apic_max  = np.array( v_apic_max[ ctl ][0] ) # 'dend_only'
-	sics_v_apic_max = v_apic_max[ sic_bac ] # 'sic'/'bac'
+	sics_v_apic_max = v_apic_max[ targ ] # 'sic'/'bac'
 	i_dend = np.array(input_amp[ ctl ][0]) * 1000
 	
 	dist     = p['dist']
@@ -161,7 +160,7 @@ def plot_i_v(input_amp, v_apic_max, p):
 	dir_imgs = p['dir_imgs']
 	dist_id  = p['dist_id']
 	
-	for i_delay in p['i_dend_delays'][sic_bac]:
+	for i_delay in p['i_dend_delays'][targ]:
 	
 		fig = plt.figure(constrained_layout=True, figsize=(3.0, 3.0))
 		ax = fig.add_subplot()
@@ -185,7 +184,7 @@ def plot_i_v(input_amp, v_apic_max, p):
 
 
 
-def plot_Ith_for_V_timing_dependence(input_amp_th, p):
+def plot_I_for_spike_timing_dependence(input_amp_th, p):
 	
 	Vth      = p['Vth']
 	dist     = p['dist']

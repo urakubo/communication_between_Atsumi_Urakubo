@@ -55,7 +55,7 @@ if __name__ == "__main__":
 	input_amp, v_apic_max, input_amp_th = u.load(filename_data) 
 	u_graph.plot_i_v(input_amp, v_apic_max, p)
 	u_graph.plot_i_v_summary(input_amp, v_apic_max, p)
-	u_graph.plot_Ith_for_V_timing_dependence(input_amp_th, p)
+	u_graph.plot_I_for_spike_timing_dependence(input_amp_xth, p)
 	'''
 
 	'''
@@ -81,6 +81,6 @@ if __name__ == "__main__":
 		input_amp, v_apic_max, input_amp_th = u.load(filename_data) 
 		#u_graph.plot_i_v(input_amp, v_apic_max, p)
 		u_graph.plot_i_v_summary(input_amp, v_apic_max, p)
-		#u_graph.plot_Ith_for_V_timing_dependence(input_amp_th, p)
+		#u_graph.plot_I_for_spike_timing_dependence(input_amp_th, p)
 	'''
 
