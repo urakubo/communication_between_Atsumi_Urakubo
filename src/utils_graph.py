@@ -19,29 +19,6 @@ def savefig_showfig(filename, dir_imgs = ''):
 	plt.pause(2)
 	plt.close()
 	
-def initialize_fig_panel_profile(ax, ylabel):
-	ax.spines['right'].set_visible(False)
-	ax.spines['top'].set_visible(False)
-	ax.set_xlabel('Time (ms)')
-	ax.set_ylabel(ylabel)
-	#ax.set_box_aspect(1)
-	
-	
-def initialize_fig_panel_i_v(ax):
-	ax.spines['right'].set_visible(False)
-	ax.spines['top'].set_visible(False)
-	ax.set_xlabel('Dendritic current injection (pA)')
-	ax.set_ylabel('Peak amp of dendritic memb pot (mV)')
-	#ax.set_box_aspect(1)
-	
-	
-def initialize_fig_panel_i_v2(ax):
-	ax.spines['right'].set_visible(False)
-	ax.spines['top'].set_visible(False)
-	ax.set_xlabel('Dend I (pA)')
-	ax.set_box_aspect(1)
-	
-	
 def plot_profile(filename, recs, p, i_delay):
 	
 	time_prerun = p['time_prerun']
@@ -57,8 +34,8 @@ def plot_profile(filename, recs, p, i_delay):
 	fig.suptitle(  'Distance from soma: {:.0f} um\nT(start,Idend)- T(end,Isoma) = {} ms'.format(
                 dist, str(i_delay)) )
 	
-	xmin = -50 # -time_prerun
-	xmax = time_run
+	xmin = -150 # -time_prerun
+	xmax = time_run -100
 	
 	titles  = ['Current injection (dend)',
 		  'Current injection (soma)',
@@ -84,7 +61,8 @@ def plot_profile(filename, recs, p, i_delay):
 	for i in range(4):
 		ax = axs[i]
 		ax.set_title(titles[i])
-		initialize_fig_panel_profile(ax, ylabel=ylabels[i])
+		ax.set_xlabel('Time (ms)')
+		ax.set_ylabel(ylabels[i])
 		ax.set_xlim([xmin, xmax])
 		ax.set_ylim(ylims[i])
 		ax.set_yticks(yticks[i])
@@ -124,13 +102,13 @@ class PlotProfiles(u.RepeatHandler):
 
 
 
-def plot_i_v2(input_amp, v_apic_max, p):
+def plot_i_v_summary(input_amp, v_apic_max, p):
 	
 	ctl     = p['stim_types'][1]
 	sic_bac = p['stim_types'][2]
 	dist     = p['dist']
 	Vth      = p['Vth']
-	dir_imgs = p['dir_imgs']
+	dir_imgs = p['dir_imgs_summary']
 	dist_id  = p['dist_id']
 	
 	
@@ -147,7 +125,8 @@ def plot_i_v2(input_amp, v_apic_max, p):
 		ax = axes[i]
 		sic_v =  np.array( targ_v_apic_max[i_delay] )
 		ax.set_title(  '{:.0f} ms'.format(i_delay) )
-		initialize_fig_panel_i_v2(ax)
+		ax.set_xlabel('Dend I (pA)')
+		ax.set_box_aspect(1)
 		ax.plot( i_dend, ctl_v_apic_max,
 				'o-', markersize=3, color='k', \
 				markerfacecolor='w', markeredgecolor="k", markeredgewidth=1, \
@@ -188,8 +167,10 @@ def plot_i_v(input_amp, v_apic_max, p):
 		ax = fig.add_subplot()
 		fig.suptitle(  'Distance from soma {} um\nT(start,Idend)- T(end,Isoma) = {} ms'.format(
                         str(dist), str(i_delay)) )
-		#ax.set_title( 'T(start,Idend)- T(end,Isoma) = {} ms'.format( str(i_delay) ) )
-		initialize_fig_panel_i_v(ax)		
+		ax.set_xlabel('Dendritic current injection (pA)')
+		ax.set_ylabel('Peak amp of dendritic memb pot (mV)')
+
+		initialize_fig_panel_i_v(ax)	
 		ax.plot( i_dend, ctl_v_apic_max,
 				'o-', markersize=5, color='k', markerfacecolor='w', markeredgecolor="k", markeredgewidth=1,
 				label = ctl)
@@ -225,8 +206,6 @@ def plot_Ith_for_V_timing_dependence(input_amp_th, p):
 	y_lim = [-80, 80]
 	fig = plt.figure(constrained_layout=True, figsize=(5.0, 3.0))
 	ax = fig.add_subplot()
-	ax.spines['right'].set_visible(False)
-	ax.spines['top'].set_visible(False)
 	ax.set_xlabel('T(start,Idend)- T(end,Isoma) (ms)')
 	ax.set_ylabel('(Ith_targ - Ith_ctl)/Ith_ctl (%)')
 	ax.set_xlim(x_lim)
@@ -249,8 +228,6 @@ def plot_distance_Ih(dir_imgs, func, label):
 	
 	fig = plt.figure(constrained_layout=True, figsize=(4.0, 3.0))
 	ax  = fig.add_subplot()
-	ax.spines['right'].set_visible(False)
-	ax.spines['top'].set_visible(False)
 	ax.set_xlabel('Distance from soma (um)')
 	ax.set_ylabel('gIhbar_Ih (mA/cm2)')
 	

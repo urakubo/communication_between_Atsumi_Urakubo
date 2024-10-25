@@ -13,12 +13,10 @@ plt.rcParams.update( c.rc_param )
 
     
 class PanelStackingHandler():
-    def init_panel(self, row, dist):
+    def init_panel(self, row, dist, y):
         ax = self.axes[row]
-        ax.spines['right'].set_visible(False)
-        ax.spines['top'].set_visible(False)
         ax.set_yticks( self.yticks )
-        ax.set_title('{:.0f} um'.format(dist), loc='right', y = 0.6)
+        ax.set_title('{:.0f} um'.format(dist), loc='right', y = y)
         ax.set_xlim(self.x_lim)
         ax.set_ylim(self.y_lim)
         if row != self.axes.shape[0]-1:
@@ -36,16 +34,18 @@ class PanelStackingHandler():
         self.wspace, self.hspace = 0.2, -0.02
         self.figsize = (5.0, 10.0)
         self.nrows_add_bottom = 0
-        
+        self.y = 0.6
+       
     def create_fig(self):
         self.fig, self.axes= plt.subplots( self.nrows + self.nrows_add_bottom, 1, figsize=self.figsize )
+        self.fig.supylabel(self.ylabel)
         left, right, bottom, top = 0.15, 0.9, 0.1, 0.9
         plt.subplots_adjust(left, bottom, right, top, self.wspace, self.hspace)
         self.preprocessing()
         for i, dist_id in enumerate( self.dist_ids ):
             row = self.nrows - i - 1
             dist = p['dists'][dist_id]
-            ax = self.init_panel(row, dist)
+            ax = self.init_panel(row, dist, self.y)
             self.plot_panel(ax, dist_id)
         self.postprocessing()
         
@@ -83,10 +83,18 @@ class PlotIthresholdTimingDistanceDependence(PanelStackingHandler):
         time_run    = p['time_run_after_prerun'] -150
         self.Iths_ctl, self.Iths_targ, self.Iths_delay = self.load_data(p, dist_ids, time_prerun)
         
-        self.xlabel = 'Time (ms)'
-        self.y_lim  = [-35, 35]
+        if p['mode'] == 'bac':
+            self.y_lim  = [-110, 30]
+            self.yticks = [-80, -40, 0]
+            self.y      = 0.9
+        else:
+            self.y_lim  = [-35, 35]
+            self.yticks = [-20, 0, 20]
+            self.y      = 0.6
+
+        self.xlabel = 'T(Idend,start) - T(Isoma,end) (ms)'
+        self.ylabel = '(I(threhosld,targ) - I(threshold,ctl)/I(threshold,ctl) (%)'
         self.x_lim  = [-85, 85]
-        self.yticks = [-20, 0, 20]
         self.filename = 'timing_distance_dependence_i_threshold'
   
     def plot_panel(self, ax, dist_id):
@@ -117,16 +125,27 @@ class PlotSomaticHyperpolarization(PanelStackingHandler):
 
     def __init__(self, p):
         dist_ids = list(range(0,12))
-        PanelStackingHandler.__init__(self, p, dist_ids)
-        time_prerun = p['time_prerun'] + 150
-        time_run    = p['time_run_after_prerun'] -150
-        self.t_dend, self.v_dend, self.t_soma, self.v_soma = self.load_data(p, dist_ids, time_prerun)
-        
+        PanelStackingHandler.__init__(self, p, dist_ids)        
         self.xlabel = 'Time (ms)'
-        self.y_lim  = [-110, -60]
-        self.x_lim  = [-50 -150, time_run]
-        self.yticks = [-100, -90, -80,-70]
+        self.ylabel = 'Membrane poteintial (mV)'
+        
+        if p['mode'] == 'bac':
+            self.y_lim  = [-110, 40]
+            self.yticks = [-80, -40, 0]
+            time_prerun = p['time_prerun']
+            time_run    = p['time_run_after_prerun'] -200
+            self.x_lim  = [-50 -150, time_run]
+        else:
+            self.y_lim  = [-110, -60]
+            self.yticks = [-100, -90, -80,-70]
+            time_prerun = p['time_prerun'] + 150
+            time_run    = p['time_run_after_prerun'] -150
+            self.x_lim  = [-50 -150, time_run]
+
+        
+        self.t_dend, self.v_dend, self.t_soma, self.v_soma = self.load_data(p, dist_ids, time_prerun)
         self.nrows_add_bottom = 1
+        self.y      = 0.6
         self.filename = 'membrane_pot_somatic_inhibition'
         
     def plot_panel(self, ax, dist_id):
@@ -137,7 +156,7 @@ class PlotSomaticHyperpolarization(PanelStackingHandler):
     def postprocessing(self):
         row  = self.axes.shape[0]-1
         dist = 0
-        ax = self.init_panel(row, dist)
+        ax = self.init_panel(row, dist, self.y)
         v_soma_end = self.v_soma[-1]
         ax.plot( self.x_lim, [v_soma_end, v_soma_end], 'k:' )
         ax.plot( self.t_soma, self.v_soma, 'k-', linewidth =1 )
@@ -148,13 +167,14 @@ if __name__ == "__main__":
 	
 	
     mode    = 'sic' # 'sic', 'bac', 'ttx'
+    #mode    = 'bac' # 'sic', 'bac', 'ttx'
     dist_id = 0     # 0, ..., 11
     num_cpu = 32
     p = c.set_params(mode, dist_id)
 
-    #g1 = PlotSomaticHyperpolarization(p)
-    #g1.create_fig()
+    g1 = PlotSomaticHyperpolarization(p)
+    g1.create_fig()
     
-    g2 = PlotIthresholdTimingDistanceDependence(p)
-    g2.create_fig()
+    #g2 = PlotIthresholdTimingDistanceDependence(p)
+    #g2.create_fig()
     

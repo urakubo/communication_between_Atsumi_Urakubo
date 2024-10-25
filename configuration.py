@@ -30,16 +30,16 @@ def set_params(mode, dist_id):
 		p['amps'] = [0.02 * i for i in range(0,30)] # dist_id = 6 (700 um),
 		p['Vth']  = -20		
 	elif dist_id in [4, 5]:
-		#p['amps'] = [0.02 * i for i in range(10,40)] # dist_id = 4 (500 um), 5 (600 um)
-		p['amps'] = [0.02 * i for i in range(0,40)] # dist_id = 4 (500 um), 5 (600 um)
+		id_amp_start = 0 if mode == 'bac' else 10
+		p['amps'] = [0.02 * i for i in range(id_amp_start, 40)] # dist_id = 4 (500 um), 5 (600 um)
 		p['Vth']  = -20		
 	elif dist_id in [2,3]:
-		#p['amps'] = [0.02 * i for i in range(20,50)] # dist_id = 3 (400 um),  2 (300 um),
-		p['amps'] = [0.02 * i for i in range(0,50)] # dist_id = 3 (400 um),  2 (300 um),
+		id_amp_start = 0 if mode == 'bac' else 20
+		p['amps'] = [0.02 * i for i in range(id_amp_start, 50)] # dist_id = 3 (400 um),  2 (300 um),
 		p['Vth']  = -20
 	elif dist_id in [0,1]:
-		#p['amps'] = [0.02 * i for i in range(20,50)] # dist_id = 1 (200 um),  0 (100 um),
-		p['amps'] = [0.02 * i for i in range(0,50)] # dist_id = 1 (200 um),  0 (100 um),
+		id_amp_start = 0 if mode == 'bac' else 20
+		p['amps'] = [0.02 * i for i in range(id_amp_start, 50)] # dist_id = 1 (200 um),  0 (100 um),
 		p['Vth']  = -40
 	
 	p['mode'] = mode
@@ -122,5 +122,7 @@ rc_param = {'pdf.fonttype' : 'truetype',
 	'font.family' : 'sans-serif',
 	'font.sans-serif' : 'Arial',
 	'font.style' : 'normal',
+	'axes.spines.right' : False,
+	'axes.spines.top' : False,            
 	'legend.frameon': False}
 

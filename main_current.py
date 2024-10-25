@@ -19,6 +19,7 @@ if __name__ == "__main__":
 	p  = c.set_params(mode, dist_id)
 	os.makedirs(p['dir_data'], exist_ok=True)
 	os.makedirs(p['dir_imgs'], exist_ok=True)
+	os.makedirs(p['dir_imgs_summary'], exist_ok=True)
        
 	'''
 	# Set params
@@ -36,10 +37,12 @@ if __name__ == "__main__":
 	with Pool(num_cpu) as pool:
 		output = pool.map(m.create_simulation, wrapped_args)
 
+	'''
 	# Plot profiles
 	g1 = u_graph.PlotProfiles( p )
 	g1.run()
         
+	'''
 	# Get peak amplitudes of dendirtic membrane potentials
 	filename_data = p['dir_data'] + os.sep + 'distid_{}_mode_{}'.format(dist_id, mode)
 	g2 = u.I_V( p )
@@ -51,11 +54,11 @@ if __name__ == "__main__":
 	filename_data = p['dir_data'] + os.sep + 'distid_{}_mode_{}'.format(dist_id, mode)
 	input_amp, v_apic_max, input_amp_th = u.load(filename_data) 
 	u_graph.plot_i_v(input_amp, v_apic_max, p)
-	u_graph.plot_i_v2(input_amp, v_apic_max, p)
+	u_graph.plot_i_v_summary(input_amp, v_apic_max, p)
 	u_graph.plot_Ith_for_V_timing_dependence(input_amp_th, p)
 	'''
 
-	#'''
+	'''
 	# Simulation with multiple distances (dist_ids)
 	for dist_id in range(6):
 		p            = c.set_params(mode, dist_id)
@@ -77,7 +80,7 @@ if __name__ == "__main__":
 		filename_data = p['dir_data'] + os.sep + 'distid_{}_mode_{}'.format(dist_id, mode )
 		input_amp, v_apic_max, input_amp_th = u.load(filename_data) 
 		#u_graph.plot_i_v(input_amp, v_apic_max, p)
-		u_graph.plot_i_v2(input_amp, v_apic_max, p)
+		u_graph.plot_i_v_summary(input_amp, v_apic_max, p)
 		#u_graph.plot_Ith_for_V_timing_dependence(input_amp_th, p)
-	#'''
+	'''
 
