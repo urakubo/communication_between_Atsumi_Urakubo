@@ -61,7 +61,7 @@ class PanelStackingHandler():
         pass
 
 
-class PlotIthresholdTimingDistanceDependence(PanelStackingHandler):
+class PlotTimingDistanceDependentIforDendSpike(PanelStackingHandler):
     def load_data(self, p, dist_ids, time_prerun):
         ctl  = p['stim_types'][1]
         targ = p['stim_types'][2]
@@ -109,7 +109,7 @@ class PlotIthresholdTimingDistanceDependence(PanelStackingHandler):
                  markeredgecolor="k" )
 
 
-class PlotSomaticHyperpolarization(PanelStackingHandler):
+class PlotMembPotwithSomaticI(PanelStackingHandler):
     def load_data(self, p, dist_ids, time_prerun):
         t_dend = {}
         v_dend = {}
@@ -172,9 +172,9 @@ if __name__ == "__main__":
     num_cpu = 32
     p = c.set_params(mode, dist_id)
 
-    g1 = PlotSomaticHyperpolarization(p)
+    g1 = PlotMembPotwithSomaticI(p)
     g1.create_fig()
     
-    #g2 = PlotIthresholdTimingDistanceDependence(p)
+    #g2 = PlotTimingDistanceDependentIforDendSpike(p)
     #g2.create_fig()
     

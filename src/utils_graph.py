@@ -19,6 +19,8 @@ def savefig_showfig(filename, dir_imgs = ''):
 	plt.pause(2)
 	plt.close()
 	
+	
+	
 def plot_profile(filename, recs, p, i_delay):
 	
 	time_prerun = p['time_prerun']
@@ -101,90 +103,78 @@ class PlotProfiles(u.RepeatHandler):
 		plot_profile(self.get_filename_fig(), self.recs, self.p, self.i_dend_delay )
 
 
-def plot_i_v_summary(input_amp, v_apic_max, p):
+class PlotIforSpike():
+	def __init__(self, input_amp, v_apic_max, p):
+		self.ctl      = p['stim_types'][1]
+		self.targ     = p['stim_types'][2]
+		self.dist     = p['dist']
+		self.Vth      = p['Vth']
+		self.dir_imgs = p['dir_imgs']
+		self.dir_imgs_summary = p['dir_imgs_summary']
+		self.dist_id  = p['dist_id']
+		self.delays   = p['i_dend_delays'][targ]
+		self.p        = p
+
+		self.ctl_v_apic_max  = np.array( v_apic_max[ ctl ][0] ) # 'dend_only'
+		self.targ_v_apic_max = v_apic_max[ targ ] # 'sic'/'bac'
+		self.i_dend = np.array(input_amp[ ctl ][0]) * 1000
 	
-	ctl     = p['stim_types'][1]
-	sic_bac = p['stim_types'][2]
-	dist     = p['dist']
-	Vth      = p['Vth']
-	dir_imgs = p['dir_imgs_summary']
-	dist_id  = p['dist_id']
-	
-	
-	ctl_v_apic_max  = np.array( v_apic_max[ ctl ][0] ) # 'dend_only'
-	targ_v_apic_max = v_apic_max[ sic_bac ] # 'sic'/'bac'
-	i_dend = np.array(input_amp[ ctl ][0]) * 1000
-	
-	nrows = 1
-	ncols = len( p['i_dend_delays'][sic_bac] )
-	fig, axes= plt.subplots(nrows, ncols, figsize=(20.0, 2.5))
-	fig.suptitle( 'Distance from soma: {:.0f} um'.format(dist) )
-	
-	for i, i_delay in enumerate( p['i_dend_delays'][sic_bac] ):
-		ax = axes[i]
-		sic_v =  np.array( targ_v_apic_max[i_delay] )
-		ax.set_title(  '{:.0f} ms'.format(i_delay) )
-		ax.set_xlabel('Dend I (pA)')
+	def plot_a_panel(self, ax, i_delay, type):
+		if type == 'large':
+			fig.suptitle(  'Distance from soma {} um\nT(start,Idend)- T(end,Isoma) = {} ms'.format(
+			            str(self.dist), str(i_delay)) )
+			ax.set_xlabel('Dendritic I (pA)')
+			ax.set_ylabel('Peak V (mV)')
+			markersize = 5
+		elif type == 'small':
+			ax.set_title('{:.0f} ms'.format(i_delay) )
+			ax.set_xlabel('Dendritic I (pA)')
+			markersize = 2
+		
+		ax.plot( i_dend, ctl_v_apic_max, 'ko-',
+				markersize=markersize,
+				markerfacecolor='w',
+				markeredgecolor="k",
+				markeredgewidth=1,
+				label = self.ctl)
+		ax.plot( i_dend, np.array( self.targ_v_apic_max[i_delay] ), 'ko-',
+				markersize=markersize, 
+				markerfacecolor='k', 
+				markeredgecolor="k",
+				markeredgewidth=1,
+				label = self.targ)
+		ax.plot( [np.min(self.i_dend), np.max(self.i_dend)], [self.Vth, self.Vth], 'r-' )
+		ax.set_ylim([-80, 40])
 		ax.set_box_aspect(1)
-		ax.plot( i_dend, ctl_v_apic_max,
-				'o-', markersize=3, color='k', \
-				markerfacecolor='w', markeredgecolor="k", markeredgewidth=1, \
-				label = 'control')
-		ax.plot( i_dend, sic_v,
-				'o-', markersize=3, color='k', \
-				markerfacecolor='k', markeredgecolor="k", markeredgewidth=1, \
-				label = 'sic')
-		ax.plot( [np.min(i_dend), np.max(i_dend)], [Vth, Vth], 'r-' )
-		ax.set_ylim([-80, 40])
-		if i == 0:
-			ax.set_ylabel('Dend peak V (mV)')
-		else:
-			ax.axes.yaxis.set_ticklabels([])
-		#ax.legend()
-	
-	filename =   'distid{}_i_v'.format( dist_id )
-	savefig_showfig(filename, dir_imgs)
+		
+	def repeat_plots():
+		p = self.p
+		for i_delay in self.delays:
+			fig = plt.figure(constrained_layout=True, figsize=(3.0, 3.0))
+			ax = fig.add_subplot()
+			self.plot_a_panel(ax, i_delay, type = 'large')
+			ax.legend()
+			filename =  'distid{}_delay{}_i_v'.format( self.dist_id, str(i_delay).replace('-','m') )
+			savefig_showfig(filename, self.dir_imgs)
+		
+	def plot_delays():
+		nrows = 1
+		ncols = len( self.delays )
+		fig, axes= plt.subplots(nrows, ncols, figsize=(20.0, 2.5))
+		fig.suptitle( 'Distance from soma: {:.0f} um'.format(self.dist) )
+		for i, i_delay in enumerate( self.delays ):
+			ax = axes[i]
+			self.plot_a_panel(ax, i_delay, type = 'small' )
+			if i == 0:
+				ax.set_ylabel('Dend peak V (mV)')
+			else:
+				ax.axes.yaxis.set_ticklabels([])
+		
+		filename =   'distid{}_i_v'.format( dist_id )
+		savefig_showfig(filename, self.dir_imgs_summary)
 
 
-def plot_i_v(input_amp, v_apic_max, p):
-	
-	ctl  = p['stim_types'][1]
-	targ = p['stim_types'][2]
-	
-	ctl_v_apic_max  = np.array( v_apic_max[ ctl ][0] ) # 'dend_only'
-	sics_v_apic_max = v_apic_max[ targ ] # 'sic'/'bac'
-	i_dend = np.array(input_amp[ ctl ][0]) * 1000
-	
-	dist     = p['dist']
-	Vth      = p['Vth']
-	dir_imgs = p['dir_imgs']
-	dist_id  = p['dist_id']
-	
-	for i_delay in p['i_dend_delays'][targ]:
-	
-		fig = plt.figure(constrained_layout=True, figsize=(3.0, 3.0))
-		ax = fig.add_subplot()
-		fig.suptitle(  'Distance from soma {} um\nT(start,Idend)- T(end,Isoma) = {} ms'.format(
-                        str(dist), str(i_delay)) )
-		ax.set_xlabel('Dendritic current injection (pA)')
-		ax.set_ylabel('Peak amp of dendritic memb pot (mV)')
-
-		initialize_fig_panel_i_v(ax)	
-		ax.plot( i_dend, ctl_v_apic_max,
-				'o-', markersize=5, color='k', markerfacecolor='w', markeredgecolor="k", markeredgewidth=1,
-				label = ctl)
-		ax.plot( i_dend, np.array( sics_v_apic_max[i_delay] ),
-				'o-', markersize=5, color='k', markerfacecolor='k', markeredgecolor="k", markeredgewidth=1,
-				label = sic_bac)
-		ax.plot( [np.min(i_dend), np.max(i_dend)], [Vth, Vth], 'r-' )
-		ax.set_ylim([-80, 40])
-		ax.legend()
-		filename =  'distid{}_delay{}_i_v'.format( dist_id, str(i_delay).replace('-','m') )
-		savefig_showfig(filename, dir_imgs)
-
-
-
-def plot_I_for_spike_timing_dependence(input_amp_th, p):
+def plot_timing_dependent_i_for_spike(input_amp_th, p):
 	
 	Vth      = p['Vth']
 	dist     = p['dist']
@@ -215,7 +205,7 @@ def plot_I_for_spike_timing_dependence(input_amp_th, p):
 	ax.plot( delays, (Ith_targ - Ith_ctl)/Ith_ctl * 100,
 				'o-', markersize=5, color='k', markerfacecolor='k', markeredgecolor="k" )
 	
-	filename =   'dist_{}_Ith_for_V_timing_dependence'.format( dist_id )
+	filename = 'dist_{}_Ith_for_V_timing_dependence'.format( dist_id )
 	savefig_showfig(filename, dir_imgs)
 	
 

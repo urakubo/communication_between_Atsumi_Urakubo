@@ -13,15 +13,16 @@ import src.model_simulation as m
 if __name__ == "__main__":
 	
 	
-	mode    = 'bac' # 'sic', 'bac', 'ttx'
-	dist_id = 1     # 0, ..., 11
+	mode    = 'sic' # 'sic', 'bac', 'ttx'
+	dist_id = 4     # 0, ..., 11
 	num_cpu = 32
+	num_cpu = 7
 	p  = c.set_params(mode, dist_id)
 	os.makedirs(p['dir_data'], exist_ok=True)
 	os.makedirs(p['dir_imgs'], exist_ok=True)
 	os.makedirs(p['dir_imgs_summary'], exist_ok=True)
-       
-	'''
+    
+	
 	# Set params
 	p            = c.set_params(mode, dist_id)
 	wrapped_args = c.set_args_for_each_run(p)
@@ -43,6 +44,7 @@ if __name__ == "__main__":
 	g1.run()
         
 	'''
+	
 	# Get peak amplitudes of dendirtic membrane potentials
 	filename_data = p['dir_data'] + os.sep + 'distid_{}_mode_{}'.format(dist_id, mode)
 	g2 = u.I_V( p )
@@ -53,11 +55,14 @@ if __name__ == "__main__":
 	# Plot Ca spike amplitudes and the timing dependence
 	filename_data = p['dir_data'] + os.sep + 'distid_{}_mode_{}'.format(dist_id, mode)
 	input_amp, v_apic_max, input_amp_th = u.load(filename_data) 
-	u_graph.plot_i_v(input_amp, v_apic_max, p)
-	u_graph.plot_i_v_summary(input_amp, v_apic_max, p)
-	u_graph.plot_I_for_spike_timing_dependence(input_amp_xth, p)
-	'''
-
+	
+	pl = u_graph.PlotIforSpike(input_amp, v_apic_max, p)
+	pl.repeat_plots()
+	pl.plot_delays()
+	
+	#u_graph.plot_timing_dependent_i_for_spike(input_amp_xth, p)
+	
+	
 	'''
 	# Simulation with multiple distances (dist_ids)
 	for dist_id in range(6):
@@ -79,8 +84,9 @@ if __name__ == "__main__":
 		p = c.set_params(mode, dist_id)
 		filename_data = p['dir_data'] + os.sep + 'distid_{}_mode_{}'.format(dist_id, mode )
 		input_amp, v_apic_max, input_amp_th = u.load(filename_data) 
-		#u_graph.plot_i_v(input_amp, v_apic_max, p)
-		u_graph.plot_i_v_summary(input_amp, v_apic_max, p)
-		#u_graph.plot_I_for_spike_timing_dependence(input_amp_th, p)
+		pl = u_graph.PlotIforSpike(input_amp, v_apic_max, p)
+		pl.plot_delays()
+		#pl.repeat_plots()
+		#u_graph.plot_timing_dependent_i_for_spike(input_amp_th, p)
 	'''
 
