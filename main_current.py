@@ -30,6 +30,7 @@ if __name__ == "__main__":
 	print('Example parameters for a run')
 	pprint.pprint(wrapped_args[0])
 
+	'''
 	# Single process
 	#for arg in wrapped_args:
 	#	m.create_simulation(arg)
@@ -38,7 +39,6 @@ if __name__ == "__main__":
 	with Pool(num_cpu) as pool:
 		output = pool.map(m.create_simulation, wrapped_args)
 
-	'''
 	# Plot profiles
 	g1 = u_graph.PlotProfiles( p )
 	g1.run()

@@ -112,32 +112,30 @@ class PlotIforSpike():
 		self.dir_imgs = p['dir_imgs']
 		self.dir_imgs_summary = p['dir_imgs_summary']
 		self.dist_id  = p['dist_id']
-		self.delays   = p['i_dend_delays'][targ]
+		self.delays   = p['i_dend_delays'][self.targ]
 		self.p        = p
 
-		self.ctl_v_apic_max  = np.array( v_apic_max[ ctl ][0] ) # 'dend_only'
-		self.targ_v_apic_max = v_apic_max[ targ ] # 'sic'/'bac'
-		self.i_dend = np.array(input_amp[ ctl ][0]) * 1000
+		self.ctl_v_apic_max  = np.array( v_apic_max[ self.ctl ][0] ) # 'dend_only'
+		self.targ_v_apic_max = v_apic_max[ self.targ ] # 'sic'/'bac'
+		self.i_dend = np.array(input_amp[ self.ctl ][0]) * 1000
 	
 	def plot_a_panel(self, ax, i_delay, type):
 		if type == 'large':
-			fig.suptitle(  'Distance from soma {} um\nT(start,Idend)- T(end,Isoma) = {} ms'.format(
-			            str(self.dist), str(i_delay)) )
 			ax.set_xlabel('Dendritic I (pA)')
 			ax.set_ylabel('Peak V (mV)')
 			markersize = 5
 		elif type == 'small':
 			ax.set_title('{:.0f} ms'.format(i_delay) )
-			ax.set_xlabel('Dendritic I (pA)')
+			ax.set_xlabel('Dend I (pA)')
 			markersize = 2
 		
-		ax.plot( i_dend, ctl_v_apic_max, 'ko-',
+		ax.plot( self.i_dend, self.ctl_v_apic_max, 'ko-',
 				markersize=markersize,
 				markerfacecolor='w',
 				markeredgecolor="k",
 				markeredgewidth=1,
 				label = self.ctl)
-		ax.plot( i_dend, np.array( self.targ_v_apic_max[i_delay] ), 'ko-',
+		ax.plot( self.i_dend, np.array( self.targ_v_apic_max[i_delay] ), 'ko-',
 				markersize=markersize, 
 				markerfacecolor='k', 
 				markeredgecolor="k",
@@ -146,18 +144,21 @@ class PlotIforSpike():
 		ax.plot( [np.min(self.i_dend), np.max(self.i_dend)], [self.Vth, self.Vth], 'r-' )
 		ax.set_ylim([-80, 40])
 		ax.set_box_aspect(1)
-		
-	def repeat_plots():
+
+        
+	def repeat_plots(self):
 		p = self.p
 		for i_delay in self.delays:
 			fig = plt.figure(constrained_layout=True, figsize=(3.0, 3.0))
+			fig.suptitle('Distance from soma {:.0f} um\nT(start,Idend)- T(end,Isoma) = {} ms'.\
+                                       format(self.dist, str(i_delay) ) )
 			ax = fig.add_subplot()
 			self.plot_a_panel(ax, i_delay, type = 'large')
 			ax.legend()
 			filename =  'distid{}_delay{}_i_v'.format( self.dist_id, str(i_delay).replace('-','m') )
 			savefig_showfig(filename, self.dir_imgs)
 		
-	def plot_delays():
+	def plot_delays(self):
 		nrows = 1
 		ncols = len( self.delays )
 		fig, axes= plt.subplots(nrows, ncols, figsize=(20.0, 2.5))
@@ -170,7 +171,7 @@ class PlotIforSpike():
 			else:
 				ax.axes.yaxis.set_ticklabels([])
 		
-		filename =   'distid{}_i_v'.format( dist_id )
+		filename =   'distid{}_i_v'.format( self.dist_id )
 		savefig_showfig(filename, self.dir_imgs_summary)
 
 
