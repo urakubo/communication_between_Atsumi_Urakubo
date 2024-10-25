@@ -2,6 +2,7 @@
 *.pdf
 *.pickle
 *.png
+*~
 
 # Output dirs
 
