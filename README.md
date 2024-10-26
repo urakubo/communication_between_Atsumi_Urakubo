@@ -59,12 +59,20 @@ Simulation and analyses are conducted on the base directory. Executable programs
 | **`time_run_after_prerun`** | float | Simulation time after the prerun (ms). |
 | **`Vth`** | float | Threshold amplitude of membrane potential to determine it as a spike. |
 
-## Input and output of the function "configuration.set_params(mode, dist_id)"
-#### input arguments
+
+
+## Input and output of the function "configuration.set_params"
+
+The function "configuration.set_params" is the loader of simulation parameters from configration.py.
+
+
+#### input variables
 | key | value type | description |
 | -------- | -------- | -------- |
 | **`mode`** | str | 'sic', 'ttx', or 'bac'. |
 | **`dist_id`** | int | IDs of dendritic location. 0 ,..., 11. |
+
+
 
 #### Output dict variable
 | key | value type | description |
@@ -89,7 +97,8 @@ Simulation and analyses are conducted on the base directory. Executable programs
 | **`apply_soma_ttx`** | bool | True or False of TTX application.|
 
 
-## Outputs from src.utils.I_V
+
+## Outputs from the run of src.utils.I_V
 #### input_amp
 | key | value type | description |
 | -------- | -------- | -------- |
