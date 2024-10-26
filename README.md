@@ -59,14 +59,14 @@ Simulation and analyses are conducted on the base directory. Executable programs
 | **`time_run_after_prerun`** | float | Simulation time after the prerun (ms). |
 | **`Vth`** | float | Threshold amplitude of membrane potential to determine it as a spike. |
 
-#### Input and output of the function "configuration.set_params(mode, dist_id)"
- **`input arguments`** 
+## Input and output of the function "configuration.set_params(mode, dist_id)"
+#### input arguments
 | key | value type | description |
 | -------- | -------- | -------- |
 | **`mode`** | str | 'sic', 'ttx', or 'bac'. |
 | **`dist_id`** | int | IDs of dendritic location. 0 ,..., 11. |
 
- **`Dict variable created`** 
+#### Output dict variable
 | key | value type | description |
 | -------- | -------- | -------- |
 | **`mode`** | str | 'sic', 'ttx', or 'bac'. |
@@ -78,36 +78,36 @@ Simulation and analyses are conducted on the base directory. Executable programs
 | **`i_dend_sec_id`** | float | Section of target input site of dendrite. |
 | **`i_dend_seg`** | float | Segment of target input site of dendrite. |
 | **`Vth`** | float | Voltage threshold for dendritic spiking (mV). |
-| **`dir_data`** | str | Directory for for data files. |
-| **`dir_imgs`** | str | Directory for for created images. |
-| **`dir_imgs_summary`** | str | Directory for for created summary images. |
+| **`dir_data`** | str | Directory for data files. |
+| **`dir_imgs`** | str | Directory for created images. |
+| **`dir_imgs_summary`** | str | Directory for created summary images. |
 | **`stim_types`** | list(str) | 'soma_only', 'dend_only', or 'soma_and_dend' |
-| **`i_dend_delays`** | dict(list(float)) | Delays of onset of dendritic current for each of stim_types (ms). |
-| **`i_dend_amps`** | dict(list(float)) | Amplitudes of dendritic current for each of stim_types (nA). |
-| **`i_soma_amps`** | dict(float) | Amplitude of somatic current for each of stim_types (nA).|
+| **`i_dend_delays`** | dict(list(float)) | Delays of onset of dendritic current (ms, list) for each of stim_types (dict key). |
+| **`i_dend_amps`** | dict(list(float)) | Amplitudes of dendritic current (nA, list) for each of stim_types (dict key). |
+| **`i_soma_amps`** | dict(float) | Amplitude of somatic current (nA) for each of stim_types (dict key).|
 | **`i_soma_duration`** | float | Duration of somatic current (ms).|
-| **`apply_soma_ttx`** | bool | True or False on TTX application.|
+| **`apply_soma_ttx`** | bool | True or False of TTX application.|
 
 
-#### Outputs from src.utils.I_V
- **`input_amp`** 
+## Outputs from src.utils.I_V
+#### input_amp
 | key | value type | description |
 | -------- | -------- | -------- |
-| **`soma_only`** | dict(list(float)) | One element dict (key: 0 ms). Amplitude of dendritic current (0 nA only, one element list) for the delay 0 ms. |
+| **`soma_only`** | dict(list(float)) | One element dict (key: 0 ms). One element list (0 nA). Amplitude of dendritic current (0 nA) for the delay 0 ms. |
 | **`dend_only`** | dict(list(float)) | One element dict (key: 0 ms). Amplitudes of dendritic current (nA, list) the delay 0 ms. |
-| **`soma_and_dend`** | dict(list(float)) | Amplitudes of dendritic current (nA, list) for each delay (ms, dict). |
+| **`soma_and_dend`** | dict(list(float)) | Amplitudes of dendritic current (nA, list) for each delay (ms, dict key). |
 
- **`v_apic_max`** 
+#### v_apic_max
 | key | value type | description |
 | -------- | -------- | -------- |
-| **`soma_only`** | dict(list(float)) | One element dict (key: 0 ms). Maximal dendritic V (mV, one element list) for the delay 0 ms. |
+| **`soma_only`** | dict(list(float)) | One element dict (key: 0 ms). One element list (elem: X mV). Maximal dendritic V (mV) for the delay 0 ms. |
 | **`dend_only`** | dict(list(float)) | One element dict (key: 0 ms). Maximal dendritic V (mV, list) for the delay 0 ms. |
 | **`soma_and_dend`** | dict(list(float)) | Maximal dendritic V (mV, list) for each delay (ms, dict). |
 
- **`input_amp_th`** 
+#### input_amp_th
 | key | value type | description |
 | -------- | -------- | -------- |
 | **`soma_only`** | dict(float) | {0: None} |
-| **`dend_only`** | dict(float) | One element dict (key: 0 ms). I_threshold for spike (nA, dict value) for the delay 0 ms. |
-| **`soma_and_dend`** | dict(float) | I_threshold for spike (nA, dict value)  for each delay (ms, dict). |
+| **`dend_only`** | dict(float) | One element dict (key: 0 ms). I_threshold for spike (nA, dict value) for the delay 0 (ms, dict key). |
+| **`soma_and_dend`** | dict(float) | I_threshold for spike (nA, dict value)  for each delay (ms, dict key). |
 
