@@ -42,8 +42,6 @@ if __name__ == "__main__":
 	# Plot profiles
 	g1 = u_graph.PlotProfiles( p )
 	g1.run()
-        
-	'''
 	
 	# Get peak amplitudes of dendirtic membrane potentials
 	filename_data = p['dir_data'] + os.sep + 'distid_{}_mode_{}'.format(dist_id, mode)
@@ -51,19 +49,21 @@ if __name__ == "__main__":
 	g2.run()
 	data  = (g2.input_amp, g2.v_apic_max, g2.input_amp_th)
 	u.save(filename_data, data)
+        
+	'''
 
 	# Plot Ca spike amplitudes and the timing dependence
 	filename_data = p['dir_data'] + os.sep + 'distid_{}_mode_{}'.format(dist_id, mode)
 	input_amp, v_apic_max, input_amp_th = u.load(filename_data) 
-	
+
+        
+	'''	
 	pl = u_graph.PlotIforSpike(input_amp, v_apic_max, p)
 	pl.repeat_plots()
 	pl.plot_delays()
 	
 	#u_graph.plot_timing_dependent_i_for_spike(input_amp_xth, p)
 	
-	
-	'''
 	# Simulation with multiple distances (dist_ids)
 	for dist_id in range(6):
 		p            = c.set_params(mode, dist_id)

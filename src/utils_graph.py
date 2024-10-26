@@ -82,8 +82,6 @@ def plot_profile(filename, recs, p, i_delay):
 		axs[2].plot(v['t'] - time_prerun, v['v_apic'], color=col, linewidth = lw )
 		axs[3].plot(v['t'] - time_prerun, v['v_soma'], color=col, linewidth = lw )
 	
-	
-	#ax.legend(frameon=False)
 	savefig_showfig(filename)
 	
 	
@@ -206,10 +204,9 @@ def plot_timing_dependent_i_for_spike(input_amp_th, p):
 	ax.plot( delays, (Ith_targ - Ith_ctl)/Ith_ctl * 100,
 				'o-', markersize=5, color='k', markerfacecolor='k', markeredgecolor="k" )
 	
-	filename = 'dist_{}_Ith_for_V_timing_dependence'.format( dist_id )
+	filename = 'dist_{}_timing_dependent_i_for_spike'.format( dist_id )
 	savefig_showfig(filename, dir_imgs)
-	
-
+        
 	
 def plot_distance_Ih(dir_imgs, func, label):
 	
