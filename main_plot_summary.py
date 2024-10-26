@@ -33,16 +33,20 @@ class PanelStackingHandler():
         self.wspace, self.hspace = 0.2, -0.02
         self.figsize = (5.0, 10.0)
         self.nrows_add_bottom = 0
+        self.nrows_add_top = 0
         self.y = 0.6
        
     def create_fig(self):
-        self.fig, self.axes= plt.subplots( self.nrows + self.nrows_add_bottom, 1, figsize=self.figsize )
+        self.fig, self.axes = \
+            plt.subplots( \
+                          self.nrows + self.nrows_add_bottom + self.nrows_add_top, \
+                          1, figsize=self.figsize )
         self.fig.supylabel(self.ylabel)
         left, right, bottom, top = 0.15, 0.9, 0.1, 0.9
         plt.subplots_adjust(left, bottom, right, top, self.wspace, self.hspace)
         self.preprocessing()
         for i, dist_id in enumerate( self.dist_ids ):
-            row = self.nrows - i - 1
+            row = self.nrows - i - 1 + self.nrows_add_top
             dist = p['dists'][dist_id]
             ax = self.init_panel(row, dist, self.y)
             self.plot_panel(ax, dist_id)
@@ -120,14 +124,15 @@ class PlotMembPotwithSomaticI(PanelStackingHandler):
             v_dend[dist_id] = data['v_apic']
         t_soma = data['t'] - time_prerun
         v_soma = data['v_soma']
-        return t_dend, v_dend, t_soma, v_soma
+        i_soma = data['i_soma']
+        return t_dend, v_dend, t_soma, v_soma, i_soma
 
     def __init__(self, p):
         dist_ids = list(range(0,12))
         PanelStackingHandler.__init__(self, p, dist_ids)        
         self.xlabel = 'Time (ms)'
         self.ylabel = 'Membrane poteintial (mV)'
-        
+
         if p['mode'] == 'bac':
             self.y_lim  = [-110, 40]
             self.yticks = [-80, -40, 0]
@@ -142,10 +147,12 @@ class PlotMembPotwithSomaticI(PanelStackingHandler):
             self.x_lim  = [-50 -150, time_run]
 
         
-        self.t_dend, self.v_dend, self.t_soma, self.v_soma = self.load_data(p, dist_ids, time_prerun)
+        self.t_dend, self.v_dend, self.t_soma, self.v_soma, self.i_soma = \
+            self.load_data(p, dist_ids, time_prerun)
         self.nrows_add_bottom = 1
+        self.nrows_add_top    = 1
         self.y      = 0.6
-        self.filename = 'membrane_pot_somatic_inhibition'
+        self.filename = 'membrane_pot_somatic_current'
         
     def plot_panel(self, ax, dist_id):
         v_dend_end = self.v_dend[dist_id][-1]
@@ -159,7 +166,25 @@ class PlotMembPotwithSomaticI(PanelStackingHandler):
         v_soma_end = self.v_soma[-1]
         ax.plot( self.x_lim, [v_soma_end, v_soma_end], 'k:' )
         ax.plot( self.t_soma, self.v_soma, 'k-', linewidth =1 )
-        
+        #
+        #
+        row  = 0
+        ax = self.axes[row]
+        #ax.set_yticks( self.yticks )
+        #ax.set_title('{:.0f} um'.format(dist), loc='right', y = y)
+        y_min = np.min(self.i_soma)
+        y_max = np.max(self.i_soma)
+        ax.set_ylim([y_min-np.abs(y_min)*0.1, y_max+np.abs(y_max)*0.1])
+        ax.set_xlim(self.x_lim)
+        ax.set_xlabel(self.xlabel)
+        ax.set_ylabel('I_(soma) (nA)')
+        pos = ax.get_position()
+        # print('ax.get_pstition() ', pos )
+        ax.set_position([pos.x0, pos.y0+0.06, pos.width, pos.height/2])
+        ax.plot( self.x_lim, [0, 0], 'k:' )
+        ax.plot( self.t_soma, self.i_soma, 'k-', linewidth = 2 )
+        #
+        #
 
 class PlotMembPotSomaDend(PanelStackingHandler):
     def load_data(self, mode, dist_ids, i_delay, time_prerun):
@@ -186,7 +211,7 @@ class PlotMembPotSomaDend(PanelStackingHandler):
         t = {}
         v_dend = {}
         v_soma = {}
-        for dist_id in dist_ids:
+        for dist_id in reversed(dist_ids):
             filename_data   = p['dir_data'] + os.sep + \
                 'distid{}_stimtype_{}_dend_Idelay{}_dend_Iamp{:.2f}'.\
 		format( dist_id, targ, str(i_delay).replace('-','m'), i_dend_amps[dist_id] )
@@ -194,23 +219,35 @@ class PlotMembPotSomaDend(PanelStackingHandler):
             t[dist_id]      = data['t'] - time_prerun
             v_dend[dist_id] = data['v_apic']
             v_soma[dist_id] = data['v_soma']
+        t_i = data['t'] - time_prerun
+        i_dend = data['i_dend']
+        i_soma = data['i_soma']
             
-        return t, v_dend, v_soma, i_dend_amps
+        return t, v_dend, v_soma, i_dend_amps, t_i, i_dend, i_soma
 
     def __init__(self, p):
-        dist_ids = list(range(3,12))
+        dist_ids = list(range(2,12))
         PanelStackingHandler.__init__(self, p, dist_ids)        
         self.xlabel = 'Time (ms)'
         self.ylabel = 'Membrane poteintial (mV)'
         self.y_lim  = [-110, 40]
         self.yticks = [-80, -40, 0]
-        time_prerun = p['time_prerun'] + 150
-        time_run    = p['time_run_after_prerun'] -150
-        self.x_lim  = [-50 -150, time_run]
-        i_delay = 10
-        self.t, self.v_dend, self.v_soma, self.i_dend_amps = \
+        
+        if p['mode'] == 'bac':
+            time_prerun = p['time_prerun']
+            time_run    = p['time_run_after_prerun'] -200
+            self.x_lim  = [-50 -150, time_run]
+            i_delay = -20
+        else:
+            time_prerun = p['time_prerun'] + 150
+            time_run    = p['time_run_after_prerun'] -150
+            self.x_lim  = [-50 -150, time_run]
+            i_delay = 10
+            
+        self.t, self.v_dend, self.v_soma, self.i_dend_amps, self.t_i, self.i_dend, self.i_soma = \
             self.load_data(mode, dist_ids, i_delay, time_prerun)
         self.nrows_add_bottom = 0
+        self.nrows_add_top    = 1
         self.y      = 0.6
         self.filename = 'membrane_pot_soma_dend'
         
@@ -223,15 +260,33 @@ class PlotMembPotSomaDend(PanelStackingHandler):
                      format(self.i_dend_amps[dist_id]*1000, p['dists'][dist_id] ),\
                      loc='right', y = 0.6)
         
+    def postprocessing(self):
+        row  = 0
+        ax = self.axes[row]
+        #ax.set_yticks( self.yticks )
+        #ax.set_title('{:.0f} um'.format(dist), loc='right', y = y)
+        y_min = np.min(np.hstack([self.i_soma, self.i_dend]) )
+        y_max = np.max(np.hstack([self.i_soma, self.i_dend]) )
+        ax.set_ylim([y_min-np.abs(y_min)*0.2, y_max+np.abs(y_max)*0.2])
+        ax.set_xlim(self.x_lim)
+        ax.set_xlabel(self.xlabel)
+        ax.set_ylabel('I (nA)')
+        pos = ax.get_position()
+        # print('ax.get_pstition() ', pos )
+        ax.set_position([pos.x0, pos.y0+0.06, pos.width, pos.height/2])
+        ax.plot( self.x_lim, [0, 0], 'k:' )
+        ax.plot( self.t_i, self.i_soma, 'k-', linewidth = 1 )
+        ax.plot( self.t_i, self.i_dend, 'r-', linewidth = 1 )
+        #
+        #        
     
 if __name__ == "__main__":
 	
 	
-    mode    = 'sic' # 'sic', 'bac', 'ttx'
-    #mode    = 'bac' # 'sic', 'bac', 'ttx'
-    mode    = 'ttx' # 'sic', 'bac', 'ttx'
+    #mode    = 'sic'
+    mode    = 'bac'
+    #mode    = 'ttx'
     dist_id = 0     # 0, ..., 11
-    num_cpu = 32
     p = c.set_params(mode, dist_id)
 
     #g1 = PlotMembPotwithSomaticI(p)
