@@ -42,7 +42,7 @@ Simulation and analyses are conducted on the base directory. Executable programs
 "main_current.py" calls the function "create_simulation" located in "src/model_simulation.py". The "create_simulation"  function accepts the following dict variable, builds a model neuron, run simulation, and save simulation results.
 
 
-#### Dict variable for "create_simulation" (argument)
+#### Dict variable for the input argument of "create_simulation"
 
 | key | value type | description |
 | -------- | -------- | -------- |
@@ -59,4 +59,55 @@ Simulation and analyses are conducted on the base directory. Executable programs
 | **`time_run_after_prerun`** | float | Simulation time after the prerun (ms). |
 | **`Vth`** | float | Threshold amplitude of membrane potential to determine it as a spike. |
 
+#### Input and output of the function "configuration.set_params(mode, dist_id)"
+ **`input arguments`** 
+| key | value type | description |
+| -------- | -------- | -------- |
+| **`mode`** | str | 'sic', 'ttx', or 'bac'. |
+| **`dist_id`** | int | IDs of dendritic location. 0 ,..., 11. |
+
+ **`Dict variable created`** 
+| key | value type | description |
+| -------- | -------- | -------- |
+| **`mode`** | str | 'sic', 'ttx', or 'bac'. |
+| **`dists`** | list(float) | List of distances (um) of dendritic input sites. |
+| **`i_dend_sec_ids`** | list(int) | List of sections of dendritic input sites. |
+| **`i_dend_segs`** | list(float) | List of segments of dendritic input sites. |
+| **`dist_id`** | int | ID of target input site of dendrite. |
+| **`dist`** | float | Distance (um) of target input site of dendrite. |
+| **`i_dend_sec_id`** | float | Section of target input site of dendrite. |
+| **`i_dend_seg`** | float | Segment of target input site of dendrite. |
+| **`Vth`** | float | Voltage threshold for dendritic spiking (mV). |
+| **`dir_data`** | str | Directory for for data files. |
+| **`dir_imgs`** | str | Directory for for created images. |
+| **`dir_imgs_summary`** | str | Directory for for created summary images. |
+| **`stim_types`** | list(str) | 'soma_only', 'dend_only', or 'soma_and_dend' |
+| **`i_dend_delays`** | dict(list(float)) | Delays of onset of dendritic current for each of stim_types (ms). |
+| **`i_dend_amps`** | dict(list(float)) | Amplitudes of dendritic current for each of stim_types (nA). |
+| **`i_soma_amps`** | dict(float) | Amplitude of somatic current for each of stim_types (nA).|
+| **`i_soma_duration`** | float | Duration of somatic current (ms).|
+| **`apply_soma_ttx`** | bool | True or False on TTX application.|
+
+
+#### Outputs from src.utils.I_V
+ **`input_amp`** 
+| key | value type | description |
+| -------- | -------- | -------- |
+| **`soma_only`** | dict(list(float)) | One element dict (key: 0 ms). Amplitude of dendritic current (0 nA only, one element list) for the delay 0 ms. |
+| **`dend_only`** | dict(list(float)) | One element dict (key: 0 ms). Amplitudes of dendritic current (nA, list) the delay 0 ms. |
+| **`soma_and_dend`** | dict(list(float)) | Amplitudes of dendritic current (nA, list) for each delay (ms, dict). |
+
+ **`v_apic_max`** 
+| key | value type | description |
+| -------- | -------- | -------- |
+| **`soma_only`** | dict(list(float)) | One element dict (key: 0 ms). Maximal dendritic V (mV, one element list) for the delay 0 ms. |
+| **`dend_only`** | dict(list(float)) | One element dict (key: 0 ms). Maximal dendritic V (mV, list) for the delay 0 ms. |
+| **`soma_and_dend`** | dict(list(float)) | Maximal dendritic V (mV, list) for each delay (ms, dict). |
+
+ **`input_amp_th`** 
+| key | value type | description |
+| -------- | -------- | -------- |
+| **`soma_only`** | dict(float) | {0: None} |
+| **`dend_only`** | dict(float) | One element dict (key: 0 ms). I_threshold for spike (nA, dict value) for the delay 0 ms. |
+| **`soma_and_dend`** | dict(float) | I_threshold for spike (nA, dict value)  for each delay (ms, dict). |
 
