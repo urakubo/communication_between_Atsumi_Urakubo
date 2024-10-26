@@ -64,7 +64,7 @@ Simulation and analyses are conducted on the base directory. Executable programs
 The function "configuration.set_params" is the loader of simulation parameters from configration.py.
 
 
-#### input variables
+#### Input variables
 | key | value type | description |
 | -------- | -------- | -------- |
 | **`mode`** | str | 'sic', 'ttx', or 'bac'. |
