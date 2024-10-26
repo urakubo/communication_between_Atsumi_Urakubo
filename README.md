@@ -74,13 +74,13 @@ Simulation and analyses are conducted on the base directory. Executable programs
 | **`i_dend_sec_ids`** | list(int) | List of sections of dendritic input sites. |
 | **`i_dend_segs`** | list(float) | List of segments of dendritic input sites. |
 | **`dist_id`** | int | ID of target input site of dendrite. |
-| **`dist`** | float | Distance (um) of target input site of dendrite. |
+| **`dist`** | float | Distance (um) of target input site of dendrite from the soma. |
 | **`i_dend_sec_id`** | float | Section of target input site of dendrite. |
 | **`i_dend_seg`** | float | Segment of target input site of dendrite. |
 | **`Vth`** | float | Voltage threshold for dendritic spiking (mV). |
 | **`dir_data`** | str | Directory for data files. |
-| **`dir_imgs`** | str | Directory for created images. |
-| **`dir_imgs_summary`** | str | Directory for created summary images. |
+| **`dir_imgs`** | str | Directory for images. |
+| **`dir_imgs_summary`** | str | Directory for summary images. |
 | **`stim_types`** | list(str) | 'soma_only', 'dend_only', or 'soma_and_dend' |
 | **`i_dend_delays`** | dict(list(float)) | Delays of onset of dendritic current (ms, list) for each of stim_types (dict key). |
 | **`i_dend_amps`** | dict(list(float)) | Amplitudes of dendritic current (nA, list) for each of stim_types (dict key). |
