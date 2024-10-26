@@ -21,7 +21,7 @@ All programs are written in Python3.8 (Windows/Linux) and designed for the simul
 Simulation and analyses are conducted on the base directory. Executable programs (main_xxx.py files) refers utility programs in the src directory and NEURON models in the model directory.
 
 
-##### .py files to check when starting a simulation
+#### .py files to check when starting a simulation
 | .py file | functions |
 | -------- | -------- |
 | **`main_current.py`** | It simulates SIC, BAC, and the SIC during local application of TTX to the soma. |
@@ -30,7 +30,7 @@ Simulation and analyses are conducted on the base directory. Executable programs
 | **`configuration.py`** | It defines parameters. It also produces a series of the dict variable required for each run. The dict variable is read by the function "create_simulation". |
 
 
-##### Directories
+#### Directories
 | directory | contents |
 | -------- | -------- |
 | **`src`** |Executable programs of Python |
@@ -41,7 +41,7 @@ Simulation and analyses are conducted on the base directory. Executable programs
 "main_current.py" calls the function "create_simulation" located in "src/model_simulation.py". The "create_simulation"  function accepts the following dict variable, builds a model neuron, run simulation, and save simulation results.
 
 
-##### Dict variable for the input argument of "create_simulation"
+#### Dict variable for the input argument of "create_simulation"
 | key | value type | description |
 | -------- | -------- | -------- |
 | **`apply_soma_ttx`** | bool | True or False. |
@@ -64,7 +64,7 @@ Simulation and analyses are conducted on the base directory. Executable programs
 The function "configuration.set_params" is the loader of simulation parameters from configration.py.
 
 
-##### input variables
+#### input variables
 | key | value type | description |
 | -------- | -------- | -------- |
 | **`mode`** | str | 'sic', 'ttx', or 'bac'. |
@@ -72,7 +72,7 @@ The function "configuration.set_params" is the loader of simulation parameters f
 
 
 
-##### Output dict variable
+#### Output dict variable
 | key | value type | description |
 | -------- | -------- | -------- |
 | **`mode`** | str | 'sic', 'ttx', or 'bac'. |
@@ -97,24 +97,26 @@ The function "configuration.set_params" is the loader of simulation parameters f
 
 
 ## Outputs from the run of src.utils.I_V
-##### input_amp
+#### input_amp
 | key | value type | description |
 | -------- | -------- | -------- |
-| **`soma_only`** | dict(list(float)) | One element dict (key: 0 ms). One element list (0 nA). Amplitude of dendritic current (0 nA) for the delay 0 ms. |
-| **`dend_only`** | dict(list(float)) | One element dict (key: 0 ms). Amplitudes of dendritic current (nA, list) the delay 0 ms. |
+| **`soma_only`** | dict(list(float)) | {0: \[0\]} . One element dict (key: 0 ms). One element list (0 nA). Amplitude of dendritic current (0 nA) for the delay 0 ms. |
+| **`dend_only`** | dict(list(float)) | {0: \[I<sub>0</sub>, ..., I<sub>n</sub>\]} . One element dict (key: 0 ms). Amplitudes of dendritic current (nA, list) the delay 0 ms. |
 | **`soma_and_dend`** | dict(list(float)) | Amplitudes of dendritic current (nA, list) for each delay (ms, dict key). |
 
-##### v_apic_max
+
+#### v_apic_max
 | key | value type | description |
 | -------- | -------- | -------- |
 | **`soma_only`** | dict(list(float)) | {0: \[X\]} . One element dict (key: 0 ms). One element list (elem: X mV). Maximal dendritic V (mV) for the delay 0 ms. |
-| **`dend_only`** | dict(list(float)) | One element dict (key: 0 ms). Maximal dendritic V (mV, list) for the delay 0 ms. |
+| **`dend_only`** | dict(list(float)) | {0: \[V<sub>0</sub>, ..., V<sub>n</sub>\]} . One element dict (key: 0 ms). Maximal dendritic V (mV, list) for the delay 0 ms. |
 | **`soma_and_dend`** | dict(list(float)) | Maximal dendritic V (mV, list) for each delay (ms, dict). |
 
-##### input_amp_th
+
+#### input_amp_th
 | key | value type | description |
 | -------- | -------- | -------- |
 | **`soma_only`** | dict(float) | {0: None} |
-| **`dend_only`** | dict(float) | One element dict (key: 0 ms). I_threshold for spike (nA, dict value) for the delay 0 (ms, dict key). |
+| **`dend_only`** | dict(float) | {0: \[I<sub>th,0</sub>, ..., I<sub>th,n</sub>\]} . One element dict (key: 0 ms). I_threshold for spike (nA, dict value) for the delay 0 (ms, dict key). |
 | **`soma_and_dend`** | dict(float) | I_threshold for spike (nA, dict value)  for each delay (ms, dict key). |
 
