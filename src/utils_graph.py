@@ -23,10 +23,10 @@ def savefig_showfig(filename, dir_imgs = ''):
 	
 def plot_profile(filename, recs, p, i_delay):
 	
-	time_prerun = p['time_prerun']
-	time_run    = p['time_run_after_prerun']
+	#time_prerun = p['time_prerun']
+	#time_run    = p['time_run_after_prerun']
 	dist        = p['dist']
-	time_set_zero = p['time_prerun'] + p['i_soma_duration']
+	time_set_zero = p['time_set_zero']
 	
 	## Preparation of plot panels
 	height_ratios = [1,1,3,3]
