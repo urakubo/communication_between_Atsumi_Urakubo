@@ -133,7 +133,7 @@ class PlotMembPotwithSomaticI(PanelStackingHandler):
         PanelStackingHandler.__init__(self, p, dist_ids)        
         self.xlabel = 'Time (ms)'
         self.ylabel = 'Membrane poteintial (mV)'
-        time_set_zero = p['time_prerun'] + p['i_soma_duration']
+        time_set_zero = p['time_set_zero']
         self.x_lim  = [-200, 250]
         
         if p['mode'] == 'bac':
@@ -180,8 +180,8 @@ class PlotMembPotwithSomaticI(PanelStackingHandler):
         ax.set_position([pos.x0, pos.y0+0.06, pos.width, pos.height/2])
         ax.plot( self.x_lim, [0, 0], 'k:' )
         ax.plot( self.t_soma, self.i_soma, 'k-', linewidth = 2 )
-        #
-        #
+#
+#
 def get_minimal_i_dend_amps(mode, dist_ids, i_delay):
     #
     p    = c.set_params(mode, dist_ids[0])
@@ -238,7 +238,7 @@ class PlotMembPotSomaDend(PanelStackingHandler):
         self.x_lim  = [-200, 250]
 
         dir_data      = p['dir_data']
-        time_set_zero = p['time_prerun'] + p['i_soma_duration']
+        time_set_zero = p['time_set_zero']
         
         self.t, self.v_dend, self.v_soma, self.i_dend_amps, self.t_i, self.i_dend, self.i_soma = \
             self.load_data(dir_data, stim_type, dist_ids, i_delay, time_set_zero, i_dend_amps)
@@ -300,7 +300,7 @@ if __name__ == "__main__":
     stim_type   = 'soma_and_dend'
     dist_ids    = list(range(2,12))
     i_delay     = -20 if mode == 'bac' else 10
-    i_delay = 10
+    i_delay     = 10
     i_dend_amps = get_minimal_i_dend_amps(mode, dist_ids, i_delay)
     #g3 = PlotMembPotSomaDend(p, stim_type, dist_ids, i_delay, i_dend_amps)
     #g3.create_fig()
