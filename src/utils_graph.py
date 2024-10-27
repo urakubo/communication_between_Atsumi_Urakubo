@@ -37,8 +37,8 @@ def plot_profile(filename, recs, p, i_delay):
 	fig.suptitle(  'Distance from soma: {:.0f} um\nT(start,Idend)- T(end,Isoma) = {} ms'.format(
                 dist, str(i_delay)) )
 	
-	xmin = -150 # -time_prerun
-	xmax = time_run -100
+	#xmin = -150 # -time_prerun
+	#xmax = time_run -100
 	x_lim  = [-200, 200]
 	
 	titles  = ['Current injection (dend)',
