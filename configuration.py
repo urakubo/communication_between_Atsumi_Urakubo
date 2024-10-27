@@ -84,7 +84,7 @@ def set_params(mode, dist_id):
 	p['time_prerun']                     = 550
 	p['time_run_after_prerun']           = 400
 	p['time_onset_for_v_peak_detection_after_prerun'] = -100
-	
+	p['time_set_zero'] = p['time_prerun'] + p['i_soma_duration']
 	return p
 
 
