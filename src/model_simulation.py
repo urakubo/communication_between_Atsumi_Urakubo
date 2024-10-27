@@ -105,8 +105,7 @@ class Recording():
 		
 		self.all = {}
 		self.i_all = []
-		self.time_prerun = arg['time_prerun']
-		self.onset_for_peak_detecion = arg['time_onset_for_v_peak_detection_after_prerun']
+		self.onset_for_peak_detecion = arg['time_onset_for_v_peak_detection']
 
 	def clear_all(self):
 		self.all = {}
@@ -115,7 +114,7 @@ class Recording():
 	def postprocessing(self, input_amp):
 		self.data = { k: np.array(v['data']) for k, v in self.recs.items() }
 		self.data['input_amp'] = input_amp
-		flag = (np.array(self.recs['t']['data']) >= self.time_prerun + self.onset_for_peak_detecion)
+		flag = (np.array(self.recs['t']['data']) >= self.onset_for_peak_detecion)
 		tmp = np.array(self.recs['v_apic']['data'])
 		self.data['v_apic_max'] = np.max( tmp[flag] )
 

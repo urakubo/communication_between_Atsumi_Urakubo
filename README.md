@@ -52,9 +52,10 @@ Simulation and analyses are conducted on the base directory. Executable programs
 | **`i_dend_seg`** | float | Segment of the apical trunk. |
 | **`i_soma_amp`** | float | Amplitude of somatic current injection (nA). |
 | **`i_soma_duration`** | float | Duration of somatic current injection (nA). |
-| **`time_onset_for_v_peak_detection_after_prerun`** | float | Onset time for the detection of peak v (ms). |
+| **`time_onset_for_v_peak_detection`** | float | Onset time for the detection of peak v (ms). |
 | **`time_prerun`** | float | Prerun time (ms). |
 | **`time_run_after_prerun`** | float | Simulation time after the prerun (ms). |
+| **`time_set_zero`** | float | Simulation time set to zero in the graph (ms). |
 | **`Vth`** | float | Threshold amplitude of membrane potential to determine it as a spike. |
 
 
