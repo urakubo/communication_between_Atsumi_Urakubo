@@ -3,6 +3,8 @@
 *.pickle
 *.png
 *~
+*.tgz
+*.tar.gz
 
 # Output dirs
 
