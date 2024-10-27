@@ -47,7 +47,7 @@ class PanelStackingHandler():
         self.preprocessing()
         for i, dist_id in enumerate( self.dist_ids ):
             row = self.nrows - i - 1 + self.nrows_add_top
-            dist = p['dists'][dist_id]
+            dist = self.p['dists'][dist_id]
             ax = self.init_panel(row, dist, self.y)
             self.plot_panel(ax, dist_id)
         self.postprocessing()
@@ -58,16 +58,17 @@ class PanelStackingHandler():
                 
     def preprocessing(self):
         pass
-    def plot_panel(self, ax):
+    def plot_panel(self, ax, dist_id):
         pass
     def postprocessing(self):
         pass
 
 
 class PlotTimingDistanceDependentIforDendSpike(PanelStackingHandler):
-    def load_data(self, p, dist_ids, time_prerun):
+    def load_data(self, p, dist_ids):
         ctl  = p['stim_types'][1]
         targ = p['stim_types'][2]
+        mode = p['mode']
         Iths_ctl   = {}
         Iths_targ  = {}
         Iths_delay = {}
@@ -82,9 +83,9 @@ class PlotTimingDistanceDependentIforDendSpike(PanelStackingHandler):
     def __init__(self, p):
         dist_ids = list(range(2,12))
         PanelStackingHandler.__init__(self, p, dist_ids)
-        time_prerun = p['time_prerun'] + 150
+        time_set_zero = p['time_prerun'] + p['i_soma_duration']
         time_run    = p['time_run_after_prerun'] -150
-        self.Iths_ctl, self.Iths_targ, self.Iths_delay = self.load_data(p, dist_ids, time_prerun)
+        self.Iths_ctl, self.Iths_targ, self.Iths_delay = self.load_data(p, dist_ids)
         
         if p['mode'] == 'bac':
             self.y_lim  = [-110, 30]
@@ -113,16 +114,16 @@ class PlotTimingDistanceDependentIforDendSpike(PanelStackingHandler):
 
 
 class PlotMembPotwithSomaticI(PanelStackingHandler):
-    def load_data(self, p, dist_ids, time_prerun):
+    def load_data(self, p, dist_ids, time_set_zero):
         t_dend = {}
         v_dend = {}
         for dist_id in dist_ids:
             filename_data   = p['dir_data'] + os.sep + \
                 'distid{}_stimtype_soma_only_dend_Idelay0_dend_Iamp0.00'.format(dist_id)
             data            = u.load(filename_data)
-            t_dend[dist_id] = data['t'] - time_prerun
+            t_dend[dist_id] = data['t'] - time_set_zero
             v_dend[dist_id] = data['v_apic']
-        t_soma = data['t'] - time_prerun
+        t_soma = data['t'] - time_set_zero
         v_soma = data['v_soma']
         i_soma = data['i_soma']
         return t_dend, v_dend, t_soma, v_soma, i_soma
@@ -132,23 +133,19 @@ class PlotMembPotwithSomaticI(PanelStackingHandler):
         PanelStackingHandler.__init__(self, p, dist_ids)        
         self.xlabel = 'Time (ms)'
         self.ylabel = 'Membrane poteintial (mV)'
-
+        time_set_zero = p['time_prerun'] + p['i_soma_duration']
+        self.x_lim  = [-200, 250]
+        
         if p['mode'] == 'bac':
             self.y_lim  = [-110, 40]
             self.yticks = [-80, -40, 0]
-            time_prerun = p['time_prerun']
-            time_run    = p['time_run_after_prerun'] -200
-            self.x_lim  = [-50 -150, time_run]
         else:
             self.y_lim  = [-110, -60]
             self.yticks = [-100, -90, -80,-70]
-            time_prerun = p['time_prerun'] + 150
-            time_run    = p['time_run_after_prerun'] -150
-            self.x_lim  = [-50 -150, time_run]
 
         
         self.t_dend, self.v_dend, self.t_soma, self.v_soma, self.i_soma = \
-            self.load_data(p, dist_ids, time_prerun)
+            self.load_data(p, dist_ids, time_set_zero)
         self.nrows_add_bottom = 1
         self.nrows_add_top    = 1
         self.y      = 0.6
@@ -185,71 +182,70 @@ class PlotMembPotwithSomaticI(PanelStackingHandler):
         ax.plot( self.t_soma, self.i_soma, 'k-', linewidth = 2 )
         #
         #
-
+def get_minimal_i_dend_amps(mode, dist_ids, i_delay):
+    #
+    p    = c.set_params(mode, dist_ids[0])
+    ctl      = p['stim_types'][1]
+    targ     = p['stim_types'][2]
+    dir_data = p['dir_data']
+    #
+    i_dend_amps = {}
+    for dist_id in dist_ids:
+        p    = c.set_params(mode, dist_id)
+        Vth  = p['Vth']
+        filename_data = dir_data + os.sep + \
+            'distid_{}_mode_{}'.format( dist_id, mode )
+        input_amp, v_apic_max, input_amp_th = u.load(filename_data)
+        targ_v_apic_max = np.array(v_apic_max[targ][i_delay]) # 'sic'/'bac'
+        if input_amp_th[targ][i_delay] != None:
+            current_id = np.where((targ_v_apic_max - Vth > 0))[0][0]
+            i_dend_amps[dist_id] = p['i_dend_amps'][targ][ current_id ]
+        else:
+            print('Did not cross the threshold. No Ca2+ spike occurred.')
+            print('Vth   : ', Vth)
+            print('Max V : ', targ_v_apic_max)
+            sys.exit(0)
+    return i_dend_amps
+    
 class PlotMembPotSomaDend(PanelStackingHandler):
-    def load_data(self, mode, dist_ids, i_delay, time_prerun):
-        #
-        p    = c.set_params(mode, dist_ids[0])
-        ctl  = p['stim_types'][1]
-        targ = p['stim_types'][2]
-        #
-        #current_id  = {}
-        i_dend_amps = {}
-        for dist_id in dist_ids:
-            p    = c.set_params(mode, dist_id)
-            Vth  = p['Vth']
-            filename_data = p['dir_data'] + os.sep + \
-                'distid_{}_mode_{}'.format( dist_id, mode )
-            input_amp, v_apic_max, input_amp_th = u.load(filename_data)
-            targ_v_apic_max = np.array(v_apic_max[targ][i_delay]) # 'sic'/'bac'
-            if input_amp_th[targ][i_delay] != None:
-                current_id = np.where((targ_v_apic_max - Vth > 0))[0][0]
-                i_dend_amps[dist_id] = p['i_dend_amps'][targ][ current_id ]
-            else:
-                i_dend_amps[dist_id] = None
-        
+
+    def load_data(self, dir_data, stim_type, dist_ids, i_delay, time_set_zero, i_dend_amps):
         t = {}
         v_dend = {}
         v_soma = {}
+        p = c.set_params(mode, dist_ids[0])
+        
         for dist_id in reversed(dist_ids):
-            filename_data   = p['dir_data'] + os.sep + \
+            filename_data = dir_data + os.sep + \
                 'distid{}_stimtype_{}_dend_Idelay{}_dend_Iamp{:.2f}'.\
-		format( dist_id, targ, str(i_delay).replace('-','m'), i_dend_amps[dist_id] )
+		format( dist_id, stim_type, str(i_delay).replace('-','m'), i_dend_amps[dist_id] )
             data            = u.load(filename_data)
-            t[dist_id]      = data['t'] - time_prerun
+            t[dist_id]      = data['t'] - time_set_zero
             v_dend[dist_id] = data['v_apic']
             v_soma[dist_id] = data['v_soma']
-        t_i = data['t'] - time_prerun
+        t_i = data['t'] - time_set_zero
         i_dend = data['i_dend']
         i_soma = data['i_soma']
             
         return t, v_dend, v_soma, i_dend_amps, t_i, i_dend, i_soma
 
-    def __init__(self, p):
-        dist_ids = list(range(2,12))
+    def __init__(self, p, stim_type, dist_ids, i_delay, i_dend_amps ):
         PanelStackingHandler.__init__(self, p, dist_ids)        
         self.xlabel = 'Time (ms)'
         self.ylabel = 'Membrane poteintial (mV)'
         self.y_lim  = [-110, 40]
         self.yticks = [-80, -40, 0]
+        self.x_lim  = [-200, 250]
+
+        dir_data      = p['dir_data']
+        time_set_zero = p['time_prerun'] + p['i_soma_duration']
         
-        if p['mode'] == 'bac':
-            time_prerun = p['time_prerun']
-            time_run    = p['time_run_after_prerun'] -200
-            self.x_lim  = [-50 -150, time_run]
-            i_delay = -20
-        else:
-            time_prerun = p['time_prerun'] + 150
-            time_run    = p['time_run_after_prerun'] -150
-            self.x_lim  = [-50 -150, time_run]
-            i_delay = 10
-            
         self.t, self.v_dend, self.v_soma, self.i_dend_amps, self.t_i, self.i_dend, self.i_soma = \
-            self.load_data(mode, dist_ids, i_delay, time_prerun)
+            self.load_data(dir_data, stim_type, dist_ids, i_delay, time_set_zero, i_dend_amps)
         self.nrows_add_bottom = 0
         self.nrows_add_top    = 1
         self.y      = 0.6
-        self.filename = 'membrane_pot_soma_dend'
+        self.filename = 'V_soma_dend_stimtype_{}_delay_{}'.format( stim_type, str(i_delay).replace('-','m') )
         
     def plot_panel(self, ax, dist_id):
         v_dend_end = self.v_dend[dist_id][-1]
@@ -282,18 +278,35 @@ class PlotMembPotSomaDend(PanelStackingHandler):
     
 if __name__ == "__main__":
 	
-	
-    #mode    = 'sic'
+    #'''
+    mode    = 'sic'
+    #mode    = 'bac'
+    #mode    = 'ttx'
+    p = c.set_params(mode, dist_id = 0)
+
+    g1 = PlotMembPotwithSomaticI(p)
+    g1.create_fig()
+    
+    g2 = PlotTimingDistanceDependentIforDendSpike(p)
+    g2.create_fig()
+    #'''
+
+    '''
+    mode    = 'sic'
     mode    = 'bac'
     #mode    = 'ttx'
-    dist_id = 0     # 0, ..., 11
-    p = c.set_params(mode, dist_id)
+    p = c.set_params(mode, dist_id = 0)
 
-    #g1 = PlotMembPotwithSomaticI(p)
-    #g1.create_fig()
-    
-    #g2 = PlotTimingDistanceDependentIforDendSpike(p)
-    #g2.create_fig()
-    
-    g3 = PlotMembPotSomaDend(p)
+    stim_type   = 'soma_and_dend'
+    dist_ids    = list(range(2,12))
+    i_delay     = -20 if mode == 'bac' else 10
+    i_delay = 10
+    i_dend_amps = get_minimal_i_dend_amps(mode, dist_ids, i_delay)
+    #g3 = PlotMembPotSomaDend(p, stim_type, dist_ids, i_delay, i_dend_amps)
+    #g3.create_fig()
+
+    i_delay   = 0
+    stim_type = 'dend_only'
+    g3 = PlotMembPotSomaDend(p, stim_type, dist_ids, i_delay, i_dend_amps)
     g3.create_fig()
+    '''

@@ -16,7 +16,7 @@ def savefig_showfig(filename, dir_imgs = ''):
 	plt.savefig(os.path.join(dir_imgs, filename + '.pdf'))
 	plt.savefig(os.path.join(dir_imgs, filename + '.png'), dpi=300)
 	plt.show(block=False)
-	plt.pause(2)
+	plt.pause(0.1)
 	plt.close()
 	
 	
@@ -26,6 +26,7 @@ def plot_profile(filename, recs, p, i_delay):
 	time_prerun = p['time_prerun']
 	time_run    = p['time_run_after_prerun']
 	dist        = p['dist']
+	time_set_zero = p['time_prerun'] + p['i_soma_duration']
 	
 	## Preparation of plot panels
 	height_ratios = [1,1,3,3]
@@ -38,6 +39,7 @@ def plot_profile(filename, recs, p, i_delay):
 	
 	xmin = -150 # -time_prerun
 	xmax = time_run -100
+	x_lim  = [-200, 200]
 	
 	titles  = ['Current injection (dend)',
 		  'Current injection (soma)',
@@ -49,15 +51,15 @@ def plot_profile(filename, recs, p, i_delay):
                    'Membrane pot (mV)',
                    'Membrane pot (mV)'
 		 ]
-	ylims   = [[-0.1, 1.1],
+	y_lims   = [[-0.1, 1.1],
                    [-0.8, 0.2],
-                   [-120, 50],
+                   [-120, 60],
                    [-120, 50]
 		 ]
 	yticks = [[0,1],
                   [-0.5,0],
-                  np.arange(-100, 40, 40),
-                  np.arange(-100, 40, 40)
+                  np.arange(-100, 60, 40),
+                  np.arange(-100, 60, 40)
 		 ]
 
 	for i in range(4):
@@ -65,8 +67,8 @@ def plot_profile(filename, recs, p, i_delay):
 		ax.set_title(titles[i])
 		ax.set_xlabel('Time (ms)')
 		ax.set_ylabel(ylabels[i])
-		ax.set_xlim([xmin, xmax])
-		ax.set_ylim(ylims[i])
+		ax.set_xlim(x_lim)
+		ax.set_ylim(y_lims[i])
 		ax.set_yticks(yticks[i])
         
 	
@@ -77,10 +79,10 @@ def plot_profile(filename, recs, p, i_delay):
 	for i, v in enumerate(recs.values()):
 		#print(i)
 		col = cmap( int(i) / cmap_max )
-		axs[0].plot(v['t'] - time_prerun, v['i_dend'], color=col, linewidth = lw )
-		axs[1].plot(v['t'] - time_prerun, v['i_soma'], color=col, linewidth = lw )
-		axs[2].plot(v['t'] - time_prerun, v['v_apic'], color=col, linewidth = lw )
-		axs[3].plot(v['t'] - time_prerun, v['v_soma'], color=col, linewidth = lw )
+		axs[0].plot(v['t'] - time_set_zero, v['i_dend'], color=col, linewidth = lw )
+		axs[1].plot(v['t'] - time_set_zero, v['i_soma'], color=col, linewidth = lw )
+		axs[2].plot(v['t'] - time_set_zero, v['v_apic'], color=col, linewidth = lw )
+		axs[3].plot(v['t'] - time_set_zero, v['v_soma'], color=col, linewidth = lw )
 	
 	savefig_showfig(filename)
 	
