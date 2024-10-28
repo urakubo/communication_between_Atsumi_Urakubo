@@ -78,7 +78,7 @@ def plot_distance_gIhbar(L5PC):
 	ax.set_xlabel('Distance from soma (um)')
 	ax.set_ylabel('gIhbar_Ih (mA/cm2)')
 	
-	ax.plot(distance, density, '--', linewidth = 3,color = '#f781bf')
+	ax.plot(distance, density, ':', linewidth = 5,color = '#f781bf')
 	
 	plot_a_dist_density(ax, apical_distance, apical_density, 'r', 'Apical')
 	plot_a_dist_density(ax, basal_distance , basal_density , 'b', 'Basal' )
