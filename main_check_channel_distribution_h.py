@@ -1,6 +1,6 @@
 
 # python -i main_check_channel_distribution.py
-import os, sys, copy, pickle
+import os, sys, copy, time
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -52,8 +52,26 @@ def calc_gIhbar_rev(distance, maxLength):
 def calc_gIhbar_none(distance, maxLength):
 	return 0.0*distance
 	
-def calc_gIhbar_const(distance, maxLength, const):
-	return 0.0*distance + const
+	
+def calc_gIhbar_uniform(distance, maxLength, gIhbar = 0.001):
+	return 0.0*distance + gIhbar
+	
+	
+def set_gIhbar(L5PC, calc_gIhbar):
+	maxLength = L5PC.getLongestBranch("apic")
+	for secs in (L5PC.somatic, L5PC.apical):
+		for sec in secs:
+			for seg in sec:
+				distance = h.distance(seg.x, sec=sec)
+				sec(seg.x).gIhbar_Ih = calc_gIhbar(distance, maxLength)
+
+	for secs in (L5PC.basal, L5PC.axonal):
+		for sec in secs:
+			for seg in sec:
+				distance = h.distance(seg.x, sec=sec) * (-1)
+				sec(seg.x).gIhbar_Ih = calc_gIhbar(distance, maxLength)
+	return True
+	
 	
 	
 def plot_model_gIhbar(L5PC):
@@ -62,9 +80,8 @@ def plot_model_gIhbar(L5PC):
 	distance      = np.linspace(-max_apical_length/2, max_apical_length, 50)
 	density_org   = calc_gIhbar_org(distance, max_apical_length)
 	density_rev   = calc_gIhbar_rev(distance, max_apical_length)
-	density_rev   = calc_gIhbar_rev(distance, max_apical_length)
 	density_none  = calc_gIhbar_none(distance, max_apical_length)
-	density_const = calc_gIhbar_const(distance, max_apical_length, const = 0.001)
+	density_const = calc_gIhbar_uniform(distance, max_apical_length)
 
 	# Plot.
 	fig = plt.figure(constrained_layout=True, figsize=(4.0, 3.0))
@@ -95,6 +112,8 @@ def get_gIhbar_org(targ_cell_lists, dist_scale = 1):
 				distance.append( h.distance(seg.x, sec=sec) * dist_scale )
 				density.append(  sec(seg.x).gIhbar_Ih  )
 	return distance, density
+	
+	
 	
 def plot_measured_gIhbar(L5PC):
 	
@@ -132,28 +151,15 @@ def plot_measured_gIhbar(L5PC):
 	filename = 'distrib_Ih_measured'
 	os.makedirs(dir_imgs, exist_ok=True)
 	u_graph.savefig_showfig(filename, dir_imgs)
-
 	
 	
+def plot_shape_h():
 	
-if __name__ == "__main__":
-	
-	L5PC, list_tuft, list_trunk, list_soma = m.create_cell()
-	h.distance(0, sec=L5PC.soma[0])
-	
-	
-	# plot_measured_gIhbar(L5PC)
-	plot_model_gIhbar(L5PC)
-	
-	'''
-	
-	ps = h.PlotShape(True)	
-	# Ih current
-	# gIhbar_Ih = 0.001
+	from neuron import gui
+	ps = h.PlotShape(True)
 	
 	ps.variable('gIhbar_Ih')
 	ps.scale(0, 0.005)
-	
 	
 	mleft, mbottom = -541.0, -226.554
 	mwidth, mheight = 611.846-mleft, 1218.9-mbottom
@@ -161,21 +167,20 @@ if __name__ == "__main__":
 	ps.view(mleft, mbottom, mwidth, mheight, sleft, sbottom, swidth, sheight)
 	ps.show(0)
 	ps.exec_menu('Shape Plot')
-	
-	# Ih distribution
-	max_apical_length = L5PC.getLongestBranch("apic")
-	print('max_apical_length ', max_apical_length)
+	time.sleep(10)
 	
 	
-	for sec in L5PC.somatic:
-		sec.gIhbar_Ih = 0.01
-	for sec in L5PC.apical:
-		for seg in sec:
-			dist = h.distance(1, sec(seg.x))
-			sec(seg.x).gIhbar_Ih = distance_gIh(dist)
-	'''
+if __name__ == "__main__":
 	
+	L5PC, list_tuft, list_trunk, list_soma = m.create_cell()
+	h.distance(0, sec=L5PC.soma[0])
 	
+	#set_gIhbar(L5PC, calc_gIhbar=calc_gIhbar_rev)
+	set_gIhbar(L5PC, calc_gIhbar=calc_gIhbar_uniform)
+	plot_measured_gIhbar(L5PC)
+	# plot_model_gIhbar(L5PC)
+	
+	# plot_shape_h()
 	
 	
 	

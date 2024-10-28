@@ -94,6 +94,7 @@ The function "configuration.set_params" is the loader of simulation parameters f
 | **`i_soma_amps`** | dict(float) | Amplitude of somatic current (nA) for each of stim_types (dict key).|
 | **`i_soma_duration`** | float | Duration of somatic current (ms).|
 | **`apply_soma_ttx`** | bool | True or False of TTX application.|
+| **`distrib_h`** | str | Optional. 'reverse','uniform',or 'none' distribution of h channels.|
 
 
 

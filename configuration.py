@@ -2,7 +2,7 @@ import os, sys
 import src.utils as u
 
 
-def set_params(mode, dist_id):
+def set_params(mode, dist_id, distrib_h = ''):
 	
 	# Shared model parameters 
 	p = {}
@@ -19,6 +19,7 @@ def set_params(mode, dist_id):
 	p['dist']          = p['dists'][ dist_id ]
 	p['i_dend_sec_id'] = p['i_dend_sec_ids'][ dist_id ]
 	p['i_dend_seg']    = p['i_dend_segs'][ dist_id ]
+	
 	
 	if dist_id in [10, 11]:
 		p['amps'] = [0.01 * i for i in range(0,30)] # dist_id = 10 (1100 um)
@@ -41,6 +42,7 @@ def set_params(mode, dist_id):
 		id_amp_start = 0 if mode == 'bac' else 20
 		p['amps'] = [0.02 * i for i in range(id_amp_start, 50)] # dist_id = 1 (200 um),  0 (100 um),
 		p['Vth']  = -40
+	
 	
 	p['mode'] = mode
 	if  mode == 'sic':
@@ -80,6 +82,18 @@ def set_params(mode, dist_id):
 		print('Invalid mode: ', mode)
 		sys.exit(1)
 	
+	
+	# Variation of h channel distribution
+	if distrib_h in ['reverse','uniform','none']:
+		p['dir_data']        += '_Ih_'+distrib_h
+		p['dir_imgs']        += '_Ih_'+distrib_h
+		p['dir_imgs_summary']+= '_Ih_'+distrib_h
+		p['distrib_h'] = distrib_h
+	elif distrib_h != '':
+		print('Invalid distrib_h: ', distrib_h)
+		sys.exit(1)
+	
+	
 	# Simulation time
 	p['time_prerun']                     = 550
 	p['time_run_after_prerun']           = 400
@@ -109,6 +123,9 @@ def set_args_for_each_run(p):
 	a['i_dend_delay'] = 0
 	a['i_dend_amp']   = 0
 	a['filename']     = ''
+	
+	if 'distrib_h' in p.keys():
+		a['distrib_h']     = p['distrib_h']
 	
 	w = u.WrappedAs(p, a)
 	w.run()

@@ -27,11 +27,13 @@ if __name__ == "__main__":
 	# gNaTs2_tbar_NaTs2_t = 0.998912 
 	# gNaTs2_tbar_NaTs2_t = 0.998912 
 	
+	'''
 	ps.variable('gNaTs2_tbar_NaTs2_t')
 	ps.scale(0, 1.2)
 	
 	ps.variable('gNaTa_tbar_NaTa_t')
 	ps.scale(0, 4.8)
+	'''
 	
 	ps.variable('gNap_Et2bar_Nap_Et2')
 	ps.scale(0, 0.012)

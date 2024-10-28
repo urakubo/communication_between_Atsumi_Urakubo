@@ -13,6 +13,49 @@ import src.utils as u
 import src.utils_graph as u_graph
 
 
+
+### h channel modification
+
+def calc_gIhbar_rev(distance, maxLength):
+	x1 = 4
+	x3 = -0.8696
+	x4 = 3.6161
+	x5 = 0.0
+	x6 = 2.0870
+	x7 = 0.00010000000
+	
+	th = 0.65
+	x2 = distance / maxLength
+	x2 = (x2 > th) * th + (x2 >= 0) * (x2 <= th) * x2 + (x2 < 0) * 0
+	
+	value = x7 * ( x3 + x6*np.exp(x4*(th-(x2-x5))) )
+	return value
+	
+def calc_gIhbar_none(distance, maxLength):
+	return 0.0*distance
+	
+def calc_gIhbar_uniform(distance, maxLength, gIhbar = 0.001):
+	return 0.0*distance + gIhbar
+	
+	
+def set_gIhbar(L5PC, calc_gIhbar):
+	maxLength = L5PC.getLongestBranch("apic")
+	for secs in (L5PC.somatic, L5PC.apical):
+		for sec in secs:
+			for seg in sec:
+				distance = h.distance(seg.x, sec=sec)
+				sec(seg.x).gIhbar_Ih = calc_gIhbar(distance, maxLength)
+
+	for secs in (L5PC.basal, L5PC.axonal):
+		for sec in secs:
+			for seg in sec:
+				distance = h.distance(seg.x, sec=sec) * (-1)
+				sec(seg.x).gIhbar_Ih = calc_gIhbar(distance, maxLength)
+	return True
+	
+	
+### Na channel modification
+	
 def apply_soma_ttx(cell):
 	targ_cell_lists = (cell.somatic, cell.apical) # cell.basal
 	for secs in targ_cell_lists:
@@ -28,10 +71,6 @@ def apply_soma_ttx(cell):
 				sec(seg.x).gNap_Et2bar_Nap_Et2 = sec(seg.x).gNap_Et2bar_Nap_Et2 /20
 	
 	
-def distance_gIh(dist):
-	return 0.25 * 0.01*(1+np.cos(dist/1000*2*np.pi*2))
-	
-	
 def create_cell():
 	
 	# Shape
@@ -45,7 +84,6 @@ def create_cell():
 	L5PC = h.L5PCtemplate(morphologyFilename)
 	
 	h.distance(0, sec=L5PC.soma[0])
-	
 	
 	# Create section lists "apical tufts" and "apical trunk"
 	list_tuft = h.SectionList()
@@ -115,15 +153,27 @@ def create_simulation(arg):
 	L5PC, list_tuft, list_trunk, list_soma = create_cell()
 	h.distance(0, sec=L5PC.soma[0])
 	
+	
 	# TTX
 	if 'apply_soma_ttx' in arg.keys() and arg['apply_soma_ttx'] == True:
 		apply_soma_ttx(L5PC)
+	
+	
+	# h channel
+	if 'distrib_h' in arg.keys() and arg['distrib_h']   == 'reverse':
+		set_gIhbar(L5PC, calc_gIhbar=calc_gIhbar_rev)
+	elif 'distrib_h' in arg.keys() and arg['distrib_h'] == 'uniform':
+		set_gIhbar(L5PC, calc_gIhbar=calc_gIhbar_uniform)
+	elif 'distrib_h' in arg.keys() and arg['distrib_h'] == 'none':
+		set_gIhbar(L5PC, calc_gIhbar=calc_gIhbar_none)
+	
 	
 	# Somatic current
 	current_soma = h.IClamp(0.5, sec=L5PC.soma[0] )
 	current_soma.delay = arg['time_prerun']
 	current_soma.dur   = arg['i_soma_duration']
 	current_soma.amp   = arg['i_soma_amp'] 
+	
 	
 	# Dendritic current
 	sec_id = arg['i_dend_sec_id']
@@ -133,16 +183,20 @@ def create_simulation(arg):
 	current_dend.dur   = 50
 	current_dend.amp   = arg['i_dend_amp']
 	
+	
 	# Set recording
 	rec = Recording(L5PC, current_soma, current_dend, arg)
+	
 	
 	# Print built model
 	dist = h.distance(1, L5PC.apic[sec_id](seg))
 	print('Stimulation: somatic current: {} nA, dendritic current: {} nA, delay: {} ms, dist from soma: {:.1f} um'.\
 		format( arg['i_soma_amp'], arg['i_dend_amp'], arg['i_dend_delay'], dist ) )
 	
+	
 	# Simulation
 	run_simulation()
+	
 	
 	# Save data
 	rec.postprocessing(arg['i_dend_amp'] )
