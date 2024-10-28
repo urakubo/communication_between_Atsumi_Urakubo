@@ -29,7 +29,7 @@ Simulation and analyses are conducted on the base directory. Executable programs
 | **`main_check_channel_distribution_Na.py`**| It visualizes Na channel distribution. It was used to make a mimic of TTX application to the soma. |
 | **`main_check_channel_distribution_h.py`**| It visualizes h channel distribution (graph and image). It was used to create altered distribution of h channels. |
 | **`main_check_loc_distance.py`**| It was used to determine current injection sites along the apical trunk. |
-| **`configuration.py`** | It defines parameters. It also produces a series of the dict variable required for each run. The dict variable is read by the function "create_simulation". |
+| **`configuration.py`** | It defines parameters. It also produces a series of the dict variable required for each run. The dict variable is read by the function "src.model_simulation.create_simulation". |
 
 
 #### Directories
@@ -43,7 +43,7 @@ Simulation and analyses are conducted on the base directory. Executable programs
 "main_current.py" calls the function "create_simulation" located in "src/model_simulation.py". The "create_simulation"  function accepts the following dict variable, builds a model neuron, run simulation, and save simulation results.
 
 
-#### Dict variable for the input argument of "create_simulation"
+#### Dict variable for the input argument of "src.model_simulation.create_simulation"
 | key | value type | description |
 | -------- | -------- | -------- |
 | **`apply_soma_ttx`** | bool | True or False. |
