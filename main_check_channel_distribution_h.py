@@ -74,7 +74,7 @@ def set_gIhbar(L5PC, calc_gIhbar):
 	
 	
 	
-def plot_model_gIhbar(L5PC):
+def plot_model_gIhbar(L5PC, dir_imgs):
 	# Calc modeled densities.
 	max_apical_length = L5PC.getLongestBranch("apic")
 	distance      = np.linspace(-max_apical_length/2, max_apical_length, 50)
@@ -115,7 +115,7 @@ def get_gIhbar_org(targ_cell_lists, dist_scale = 1):
 	
 	
 	
-def plot_measured_gIhbar(L5PC):
+def plot_measured_gIhbar(L5PC, dir_imgs):
 	
 	# Get gIhbar densities from the compartments.
 	targ_cell_lists = (L5PC.somatic, L5PC.apical)
@@ -147,9 +147,8 @@ def plot_measured_gIhbar(L5PC):
 				label = label)
 	
 	ax.legend()
-	dir_imgs = 'imgs_setup'
+
 	filename = 'distrib_Ih_measured'
-	os.makedirs(dir_imgs, exist_ok=True)
 	u_graph.savefig_showfig(filename, dir_imgs)
 	
 	
@@ -171,14 +170,17 @@ def plot_shape_h():
 	
 	
 if __name__ == "__main__":
+
+	dir_imgs = 'imgs_preparation'
+	os.makedirs(dir_imgs, exist_ok=True)
 	
 	L5PC, list_tuft, list_trunk, list_soma = m.create_cell()
 	h.distance(0, sec=L5PC.soma[0])
+	# plot_model_gIhbar(L5PC, dir_imgs)
 	
 	#set_gIhbar(L5PC, calc_gIhbar=calc_gIhbar_rev)
 	set_gIhbar(L5PC, calc_gIhbar=calc_gIhbar_uniform)
-	plot_measured_gIhbar(L5PC)
-	# plot_model_gIhbar(L5PC)
+	plot_measured_gIhbar(L5PC, dir_imgs)
 	
 	# plot_shape_h()
 	
