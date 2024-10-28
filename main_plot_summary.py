@@ -279,10 +279,11 @@ class PlotMembPotSomaDend(PanelStackingHandler):
 if __name__ == "__main__":
 	
     #'''
-    mode    = 'sic'
-    #mode    = 'bac'
-    #mode    = 'ttx'
-    p = c.set_params(mode, dist_id = 0)
+    mode      = 'sic' # 'sic', 'bac', 'ttx'
+    dist_id   = 4     # 0, ..., 11
+    distrib_h = 'reverse' # '','reverse','uniform','none'
+    
+    p = c.set_params(mode, dist_id, distrib_h)
 
     g1 = PlotMembPotwithSomaticI(p)
     g1.create_fig()
@@ -295,7 +296,7 @@ if __name__ == "__main__":
     mode    = 'sic'
     mode    = 'bac'
     #mode    = 'ttx'
-    p = c.set_params(mode, dist_id = 0)
+    p = c.set_params(mode, dist_id = 0, distrib_h)
 
     stim_type   = 'soma_and_dend'
     dist_ids    = list(range(2,12))

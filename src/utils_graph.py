@@ -14,7 +14,7 @@ def savefig_showfig(filename, dir_imgs = ''):
 	plt.savefig(os.path.join(dir_imgs, filename + '.pdf'))
 	plt.savefig(os.path.join(dir_imgs, filename + '.png'), dpi=300)
 	plt.show(block=False)
-	plt.pause(3)
+	plt.pause(0.1)
 	plt.close()
 	
 	

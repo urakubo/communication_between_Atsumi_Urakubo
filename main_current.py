@@ -14,7 +14,7 @@ if __name__ == "__main__":
 	
 	mode      = 'sic' # 'sic', 'bac', 'ttx'
 	dist_id   = 4     # 0, ..., 11
-	distrib_h = 'reverse' # '','reverse','uniform','none'
+	distrib_h = 'uniform' # '','reverse','uniform','none'
 	num_cpu   = 32
 	
 	p            = c.set_params(mode, dist_id, distrib_h)
@@ -29,9 +29,8 @@ if __name__ == "__main__":
 	
 	print('Example parameters for a run')
 	pprint.pprint(wrapped_args[0])
-	
-	
-	
+
+                
 	'''
 	# Single process
 	for arg in wrapped_args:
@@ -77,7 +76,7 @@ if __name__ == "__main__":
 	
 	
 	for dist_id in range(12):
-		p  = c.set_params(mode, dist_id)
+		p  = c.set_params(mode, dist_id, distrib_h)
 		g1 = u_graph.PlotProfiles( p )
 		g1.run()
 	
@@ -91,7 +90,7 @@ if __name__ == "__main__":
 	
 	
 	for dist_id in range(12):
-		p = c.set_params(mode, dist_id)
+		p = c.set_params(mode, dist_id, distrib_h)
 		filename_data = p['dir_data'] + os.sep + 'distid_{}_mode_{}'.format(dist_id, mode )
 		input_amp, v_apic_max, input_amp_th = u.load(filename_data) 
 		pl = u_graph.PlotIforSpike(input_amp, v_apic_max, p)
