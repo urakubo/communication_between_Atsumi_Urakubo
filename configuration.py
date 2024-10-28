@@ -100,7 +100,7 @@ def set_args_for_each_run(p):
 	
 	a['time_prerun']     = p['time_prerun']
 	a['time_run_after_prerun'] = p['time_run_after_prerun']
-	a['time_onset_for_v_peak_detection_after_prerun'] = p['time_onset_for_v_peak_detection_after_prerun']
+	a['time_onset_for_v_peak_detection'] = p['time_onset_for_v_peak_detection']
 	
 	a['Vth']  = p['Vth']
 	
@@ -123,6 +123,6 @@ rc_param = {'pdf.fonttype' : 'truetype',
 	'font.sans-serif' : 'Arial',
 	'font.style' : 'normal',
 	'axes.spines.right' : False,
-	'axes.spines.top' : False,            
+	'axes.spines.top' : False,
 	'legend.frameon': False}
 

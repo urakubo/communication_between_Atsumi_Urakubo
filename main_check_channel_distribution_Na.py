@@ -27,7 +27,6 @@ if __name__ == "__main__":
 	# gNaTs2_tbar_NaTs2_t = 0.998912 
 	# gNaTs2_tbar_NaTs2_t = 0.998912 
 	
-	'''
 	ps.variable('gNaTs2_tbar_NaTs2_t')
 	ps.scale(0, 1.2)
 	
@@ -36,14 +35,7 @@ if __name__ == "__main__":
 	
 	ps.variable('gNap_Et2bar_Nap_Et2')
 	ps.scale(0, 0.012)
-	'''
-
-	# Ih current
-	# gIhbar_Ih = 0.001
 	
-	ps.variable('gIhbar_Ih')
-	ps.scale(0, 0.005)
-
 	
 	mleft, mbottom = -541.0, -226.554
 	mwidth, mheight = 611.846-mleft, 1218.9-mbottom
@@ -51,7 +43,6 @@ if __name__ == "__main__":
 	ps.view(mleft, mbottom, mwidth, mheight, sleft, sbottom, swidth, sheight)
 	ps.show(0)
 	ps.exec_menu('Shape Plot')
-	
 	
 	
 	'''
@@ -69,4 +60,7 @@ if __name__ == "__main__":
 				sec(seg.x).gNaTa_tbar_NaTa_t = sec(seg.x).gNaTa_tbar_NaTa_t /20
 				sec(seg.x).gNap_Et2bar_Nap_Et2 = sec(seg.x).gNap_Et2bar_Nap_Et2 /20
 	'''
+	
+	
+	
 	

@@ -103,7 +103,7 @@ The function "configuration.set_params" is the loader of simulation parameters f
 | -------- | -------- | -------- |
 | **`soma_only`** | dict(list(float)) | {0: \[0\]} . One element dict (key: 0 ms). One element list (0 nA). Amplitude of dendritic current (0 nA) for the delay 0 ms. |
 | **`dend_only`** | dict(list(float)) | {0: \[I<sub>0</sub>, ..., I<sub>n</sub>\]} . One element dict (key: 0 ms). Amplitudes of dendritic current (nA, list) the delay 0 ms. |
-| **`soma_and_dend`** | dict(list(float)) | Amplitudes of dendritic current (nA, list) for each delay (ms, dict key). |
+| **`soma_and_dend`** | dict(list(float)) | {-80: \[I<sub>0</sub>, ..., I<sub>n</sub>\],...,80: \[I<sub>0</sub>, ..., I<sub>n</sub>\]} . Amplitudes of dendritic current (nA, list) for each delay (ms, dict key). |
 
 
 #### v_apic_max
@@ -111,7 +111,7 @@ The function "configuration.set_params" is the loader of simulation parameters f
 | -------- | -------- | -------- |
 | **`soma_only`** | dict(list(float)) | {0: \[X\]} . One element dict (key: 0 ms). One element list (elem: X mV). Maximal dendritic V (mV) for the delay 0 ms. |
 | **`dend_only`** | dict(list(float)) | {0: \[V<sub>0</sub>, ..., V<sub>n</sub>\]} . One element dict (key: 0 ms). Maximal dendritic V (mV, list) for the delay 0 ms. |
-| **`soma_and_dend`** | dict(list(float)) | Maximal dendritic V (mV, list) for each delay (ms, dict). |
+| **`soma_and_dend`** | dict(list(float)) | {-80: \[V<sub>-80,0</sub>, ..., V<sub>-80,n</sub>\],...,80: \[V<sub>-80,0</sub>, ..., V<sub>80,n</sub>\]} Maximal dendritic V (mV, list) for each delay (ms, dict). |
 
 
 #### input_amp_th

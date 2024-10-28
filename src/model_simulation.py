@@ -26,15 +26,15 @@ def apply_soma_ttx(cell):
 			if h.distance(seg.x, sec=sec) < 50:
 				sec(seg.x).gNaTa_tbar_NaTa_t = sec(seg.x).gNaTa_tbar_NaTa_t /20
 				sec(seg.x).gNap_Et2bar_Nap_Et2 = sec(seg.x).gNap_Et2bar_Nap_Et2 /20
-
-
+	
+	
 def distance_gIh(dist):
 	return 0.25 * 0.01*(1+np.cos(dist/1000*2*np.pi*2))
+	
 	
 def create_cell():
 	
 	# Shape
-	
 	biophysicalModelFilename = "./model/Leleo_Segev/L5PCbiophys5b.hoc"
 	biophysicalModelTemplateFilename = "./model/Leleo_Segev/L5PCtemplate_2.hoc"
 	morphologyFilename = "./model/Leleo_Segev/morphologies/cell1.asc"
@@ -47,28 +47,18 @@ def create_cell():
 	h.distance(0, sec=L5PC.soma[0])
 	
 	
-	'''
-	# Ih distribution
-	max_apical_length = L5PC.getLongestBranch("apic")
-	print('max_apical_length ', max_apical_length)
-	for sec in L5PC.somatic:
-		sec.gIhbar_Ih = 0.01
-	for sec in L5PC.apical:
-		for seg in sec:
-			dist = h.distance(1, sec(seg.x))
-			sec(seg.x).gIhbar_Ih = distance_gIh(dist)
-	'''
-	
 	# Create section lists "apical tufts" and "apical trunk"
 	list_tuft = h.SectionList()
 	list_tuft.subtree(sec=L5PC.apic[36])
 	list_tuft.remove(sec=L5PC.apic[36])
-
+	
+	
 	list_trunk = h.SectionList()
 	for id_sec in [0,1,2,3,4,14,20,26,34,36]:
 		list_trunk.append(L5PC.apic[id_sec])
 		# print('L5PC.apic[{}], distance: {}'.format( id_sec, h.distance(0.5, sec=L5PC.apic[id_sec]) ) )
-
+	
+	
 	list_soma  = h.SectionList()
 	for sec in h.allsec():
 		if h.distance(0.5, sec=sec) < 50:
@@ -76,7 +66,6 @@ def create_cell():
 			list_soma.append(sec)
 	
 	print('L5PC created!')
-	
 	return L5PC, list_tuft, list_trunk, list_soma
 
 

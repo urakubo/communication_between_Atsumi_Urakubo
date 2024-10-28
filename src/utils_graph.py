@@ -1,11 +1,9 @@
-import os, sys, glob, pickle
+import os, sys
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 import src.utils as u
 import configuration as c
-
-import matplotlib.pyplot as plt
 
 # Matplotlib
 plt.rcParams.update( c.rc_param )
@@ -16,7 +14,7 @@ def savefig_showfig(filename, dir_imgs = ''):
 	plt.savefig(os.path.join(dir_imgs, filename + '.pdf'))
 	plt.savefig(os.path.join(dir_imgs, filename + '.png'), dpi=300)
 	plt.show(block=False)
-	plt.pause(0.1)
+	plt.pause(3)
 	plt.close()
 	
 	
@@ -70,7 +68,7 @@ def plot_profile(filename, recs, p, i_delay):
 		ax.set_xlim(x_lim)
 		ax.set_ylim(y_lims[i])
 		ax.set_yticks(yticks[i])
-        
+    
 	
 	cmap     = plt.get_cmap("jet")
 	#cmap = plt.get_cmap("Blues")
@@ -144,8 +142,8 @@ class PlotIforSpike():
 		ax.plot( [np.min(self.i_dend), np.max(self.i_dend)], [self.Vth, self.Vth], 'r-' )
 		ax.set_ylim([-80, 40])
 		ax.set_box_aspect(1)
-
-        
+	
+	
 	def repeat_plots(self):
 		p = self.p
 		for i_delay in self.delays:
@@ -157,7 +155,8 @@ class PlotIforSpike():
 			ax.legend()
 			filename =  'distid{}_delay{}_i_v'.format( self.dist_id, str(i_delay).replace('-','m') )
 			savefig_showfig(filename, self.dir_imgs)
-		
+	
+	
 	def plot_delays(self):
 		nrows = 1
 		ncols = len( self.delays )
@@ -210,27 +209,6 @@ def plot_timing_dependent_i_for_spike(input_amp_th, p):
 	savefig_showfig(filename, dir_imgs)
         
 	
-def plot_distance_Ih(dir_imgs, func, label):
-	
-	maxLength = 1300.53
-	dist = np.linspace(0,maxLength,100)
-	
-	fig = plt.figure(constrained_layout=True, figsize=(4.0, 3.0))
-	ax  = fig.add_subplot()
-	ax.set_xlabel('Distance from soma (um)')
-	ax.set_ylabel('gIhbar_Ih (mA/cm2)')
-	
-	# Control
-	x3, x4, x5, x6, x7 = -0.8696, 3.6161, 0.0, 2.0870, 0.0001
-	Ih  = x3 + x6*np.exp(x4*(dist/maxLength-x5))
-	Ih *= x7
-	
-	ax.plot(dist, Ih, 'k-',label='control')
-	ax.plot(dist, func(dist), 'r-',label=label)
-	ax.legend()
-	
-	filename = 'distrib_Ih'
-	savefig_showfig(filename, dir_imgs)
 	
 	
 	
