@@ -57,6 +57,7 @@ Simulation and analyses are conducted on the base directory. Executable programs
 | **`time_run_after_prerun`** | float | Simulation time after the prerun (ms). |
 | **`time_set_zero`** | float | Simulation time set to zero in the graph (ms). |
 | **`Vth`** | float | Threshold amplitude of membrane potential to determine it as a spike. |
+| **`distrib_h`** | str | Optional. 'reverse','uniform',or 'none' distribution of h channels.|
 
 
 
