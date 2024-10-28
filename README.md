@@ -25,7 +25,9 @@ Simulation and analyses are conducted on the base directory. Executable programs
 | .py file | functions |
 | -------- | -------- |
 | **`main_current.py`** | It simulates SIC, BAC, and the SIC during local application of TTX to the soma. It also simulate them under altered distribution of h channels. |
-| **`main_check_channel_distribution.py`**| It visualizes Na and Cation channel distribution. |
+| **`main_plot_summary.py`** | It creates summary figures. WIP. |
+| **`main_check_channel_distribution_Na.py`**| It visualizes Na channel distribution. It was used to make a mimic of TTX application to the soma. |
+| **`main_check_channel_distribution_h.py`**| It visualizes h channel distribution (graph and image). It was used to create altered distribution of h channels. |
 | **`main_check_loc_distance.py`**| It was used to determine current injection sites along the apical trunk. |
 | **`configuration.py`** | It defines parameters. It also produces a series of the dict variable required for each run. The dict variable is read by the function "create_simulation". |
 
