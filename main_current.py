@@ -69,8 +69,8 @@ if __name__ == "__main__":
 	
 	
 	# Repeat simulations for multiple distances (dist_ids)
-	for dist_id in range(6):
-		p            = c.set_params(mode, dist_id)
+	for dist_id in range(12):
+		p            = c.set_params(mode, dist_id, distrib_h)
 		wrapped_args = c.set_args_for_each_run(p)
 		with Pool(num_cpu) as pool:
 			output = pool.map(m.create_simulation, wrapped_args)
