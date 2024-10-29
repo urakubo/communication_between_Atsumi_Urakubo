@@ -14,7 +14,7 @@ if __name__ == "__main__":
 	
 	mode      = 'sic' # 'sic', 'bac', 'ttx'
 	dist_id   = 4     # 0, ..., 11
-	distrib_h = 'none' # '','reverse','uniform','none'
+	distrib_h = '' # '','reverse','uniform','none'
 	num_cpu   = 32
 	
 	p            = c.set_params(mode, dist_id, distrib_h)
@@ -29,18 +29,12 @@ if __name__ == "__main__":
 	
 	print('Example parameters for a run')
 	pprint.pprint(wrapped_args[0])
-
-
 	
-	for dist_id in range(12):
-		filename_data = p['dir_data'] + os.sep + 'distid_{}_mode_{}'.format(dist_id, mode)
-		p = c.set_params(mode, dist_id, distrib_h)
-		g2 = u.I_V( p )
-		g2.run()
-		data = (g2.input_amp, g2.v_apic_max, g2.input_amp_th)
-		u.save(filename_data, data)
-
-        
+	# Single process
+	for arg in wrapped_args:
+		m.create_simulation(arg)
+	
+	
 	'''
 	# Single process
 	for arg in wrapped_args:

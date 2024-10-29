@@ -73,15 +73,25 @@ def apply_soma_ttx(cell):
 	
 def create_cell():
 	
-	# Shape
+	# Load Leleo_Segev model
 	biophysicalModelFilename = "./model/Leleo_Segev/L5PCbiophys5b.hoc"
 	biophysicalModelTemplateFilename = "./model/Leleo_Segev/L5PCtemplate_2.hoc"
 	morphologyFilename = "./model/Leleo_Segev/morphologies/cell1.asc"
 	
-	
 	h.load_file(biophysicalModelFilename)
 	h.load_file(biophysicalModelTemplateFilename)
 	L5PC = h.L5PCtemplate(morphologyFilename)
+	# End Leleo_Segev model
+	
+	
+	# Load Shai_Koch model
+	'''
+	h.load_file("./model/Shai_Koch/models/L5PCbiophys4.hoc")
+	h.load_file("./model/Shai_Koch/models/L5PCtemplate.hoc")
+	L5PC = h.L5PCtemplate("./model/Shai_Koch/morphologies/cell1.asc")
+	'''
+	# End Shai_Koch model
+	
 	
 	h.distance(0, sec=L5PC.soma[0])
 	
