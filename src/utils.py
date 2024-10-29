@@ -85,7 +85,7 @@ class I_V(RepeatHandler):
 		#print("V_dend ", V_dend )
 		#print("V_dend - Vth ", V_dend - Vth)
 		if np.all(V_dend - Vth < 0) or np.all(V_dend - Vth >= 0):
-			self.input_amp_th[self.stim_type][self.i_dend_delay] = None
+			self.input_amp_th[self.stim_type][self.i_dend_delay] = np.nan
 		else:
 			id  = np.where((V_dend - Vth > 0))[0][0]
 			I1  = I_dend[id]

@@ -93,6 +93,7 @@ class PlotTimingDistanceDependentIforDendSpike(PanelStackingHandler):
             self.y      = 0.9
         else:
             self.y_lim  = [-35, 35]
+            #self.y_lim  = [-35, 60]    ##########
             self.yticks = [-20, 0, 20]
             self.y      = 0.6
 
@@ -102,9 +103,17 @@ class PlotTimingDistanceDependentIforDendSpike(PanelStackingHandler):
         self.filename = 'timing_distance_dependent_I_for_spiking'
   
     def plot_panel(self, ax, dist_id):
-        Ith_ctl  = self.Iths_ctl[dist_id]
-        Ith_targ = self.Iths_targ[dist_id]
-        delays   = self.Iths_delay[dist_id]
+        Ith_ctl  = np.array(self.Iths_ctl[dist_id])
+        Ith_targ = np.array(self.Iths_targ[dist_id])
+        delays   = np.array(self.Iths_delay[dist_id])
+        #print('delays   ', delays)
+        #print('Ith_targ ', Ith_targ)
+        
+        delays   = delays[~np.isnan(Ith_targ)]
+        Ith_targ = Ith_targ[~np.isnan(Ith_targ)]
+        #print('REV delays   ', delays)
+        #print('REV Ith_targ ', Ith_targ)
+         
         ax.plot(self.x_lim,[0, 0], 'k:')
         ax.plot( delays, (Ith_targ - Ith_ctl)/Ith_ctl * 100,
 		 'ko-',
@@ -142,6 +151,8 @@ class PlotMembPotwithSomaticI(PanelStackingHandler):
         else:
             self.y_lim  = [-110, -60]
             self.yticks = [-100, -90, -80,-70]
+            #self.y_lim  = [-130, -40]
+            #self.yticks = [-120, -100, -80, -60]
 
         
         self.t_dend, self.v_dend, self.t_soma, self.v_soma, self.i_soma = \
@@ -281,12 +292,12 @@ if __name__ == "__main__":
     #'''
     mode      = 'sic' # 'sic', 'bac', 'ttx'
     dist_id   = 4     # 0, ..., 11
-    distrib_h = 'reverse' # '','reverse','uniform','none'
+    distrib_h = 'none' # '','reverse','uniform','none'
     
     p = c.set_params(mode, dist_id, distrib_h)
 
-    g1 = PlotMembPotwithSomaticI(p)
-    g1.create_fig()
+    #g1 = PlotMembPotwithSomaticI(p)
+    #g1.create_fig()
     
     g2 = PlotTimingDistanceDependentIforDendSpike(p)
     g2.create_fig()
