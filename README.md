@@ -127,4 +127,4 @@ The function "configuration.set_params" is the loader of simulation parameters f
 
 
 ## NEURONモデルを変えたい場合
-既定で、[**Leleo & Segev (2021, PLoS Comput Biol)**](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1009558) のモデルを採用しています。 [**Shai , ..., Koch (2015, PLoS Comput Biol)**](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004090) モデルも実行可能です。src.model_simulation.create_cell 関数の指定部分を入れ替えるとモデルが変更されます。mod のパラメータ (h チャネルのkinetics 等) が変更されているかも知れず、その場合はコンパイル後NEURONも差し替える必要があります。また、BAC実験のために発火に必要な最小の電流や、hチャネルのreverse, uniform, none 分布などは、別に設定／計算しなおす必要があります。
+既定で、[**Leleo & Segev (2021, PLoS Comput Biol)**](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1009558) のモデルを採用しています。 [**Shai , ..., Koch (2015, PLoS Comput Biol)**](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004090) モデルも実行可能です。src.model_simulation.create_cell 関数の指定部分を入れ替えるとモデルが変更されます。これら二つのモデルはhチャネル分布を除きほぼ同一と思われますが、mod のパラメータ (h チャネルのkinetics 等) が変更されているかも知れず、その場合はコンパイル後NEURONも差し替える必要があります。また、BAC実験のために発火に必要な最小の電流や、hチャネルのreverse, uniform, none 分布などは、別に設定／計算しなおす必要があります。
