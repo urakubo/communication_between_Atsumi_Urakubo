@@ -18,7 +18,7 @@ All programs are written in Python3.8 (Windows/Linux) and designed for the simul
 
 ## Basic procedure
 
-Simulation and analyses are conducted on the base directory. Executable programs (main_xxx.py files) refers utility programs in the src directory and NEURON models in the model directory.
+Simulation and analyses are conducted on the base directory. Executable programs (main_xxx.py files) refers to utility programs in the src directory and NEURON models in the model directory.
 
 
 #### .py files to check when starting a simulation
@@ -58,14 +58,14 @@ Simulation and analyses are conducted on the base directory. Executable programs
 | **`time_prerun`** | float | Prerun time (ms). |
 | **`time_run_after_prerun`** | float | Simulation time after the prerun (ms). |
 | **`time_set_zero`** | float | Simulation time set to zero in the graph (ms). |
-| **`Vth`** | float | Threshold amplitude of membrane potential to determine it as a spike. |
+| **`Vth`** | float | Threshold amplitude of membrane potential to determine it as a spike (mV). |
 | **`distrib_h`** | str | Optional. 'reverse','uniform',or 'none' distribution of h channels.|
 
 
 
 ## Input and output of the function "configuration.set_params"
 
-The function "configuration.set_params" is the loader of simulation parameters from configration.py.
+The function "configuration.set_params" is the loader of simulation parameters.
 
 
 #### Input variables
@@ -105,7 +105,7 @@ The function "configuration.set_params" is the loader of simulation parameters f
 #### input_amp
 | key | value type | description |
 | -------- | -------- | -------- |
-| **`soma_only`** | dict(list(float)) | {0: \[0\]} . One element dict (key: 0 ms). One element list (0 nA). Amplitude of dendritic current (0 nA) for the delay 0 ms. |
+| **`soma_only`** | dict(list(float)) | {0: \[0\]} . Amplitude of dendritic current (0 nA) for the delay 0 ms. |
 | **`dend_only`** | dict(list(float)) | {0: \[I<sub>0</sub>, ..., I<sub>n</sub>\]} . One element dict (key: 0 ms). Amplitudes of dendritic current (nA, list) the delay 0 ms. |
 | **`soma_and_dend`** | dict(list(float)) | {-80: \[I<sub>0</sub>, ..., I<sub>n</sub>\],...,80: \[I<sub>0</sub>, ..., I<sub>n</sub>\]} . Amplitudes of dendritic current (nA, list) for each delay (ms, dict key). |
 
@@ -113,7 +113,7 @@ The function "configuration.set_params" is the loader of simulation parameters f
 #### v_apic_max
 | key | value type | description |
 | -------- | -------- | -------- |
-| **`soma_only`** | dict(list(float)) | {0: \[X\]} . One element dict (key: 0 ms). One element list (elem: X mV). Maximal dendritic V (mV) for the delay 0 ms. |
+| **`soma_only`** | dict(list(float)) | {0: \[X\]} . Maximal dendritic V (mV) for the delay 0 ms. |
 | **`dend_only`** | dict(list(float)) | {0: \[V<sub>0</sub>, ..., V<sub>n</sub>\]} . One element dict (key: 0 ms). Maximal dendritic V (mV, list) for the delay 0 ms. |
 | **`soma_and_dend`** | dict(list(float)) | {-80: \[V<sub>-80,0</sub>, ..., V<sub>-80,n</sub>\],...,80: \[V<sub>80,0</sub>, ..., V<sub>80,n</sub>\]} Maximal dendritic V (mV, list) for each delay (ms, dict). |
 
@@ -121,9 +121,9 @@ The function "configuration.set_params" is the loader of simulation parameters f
 #### input_amp_th
 | key | value type | description |
 | -------- | -------- | -------- |
-| **`soma_only`** | dict(float) | {0: None} |
+| **`soma_only`** | dict(float) | {0: None} . |
 | **`dend_only`** | dict(float) | {0: I<sub>th</sub>} . One element dict (key: 0 ms). I_threshold for spike (nA, dict value) for the delay 0 (ms, dict key). |
-| **`soma_and_dend`** | dict(float) | {-80: I<sub>-80,th</sub>, ..., 80: I<sub>80,th</sub>} .I_threshold for spike (nA, dict value)  for each delay (ms, dict key). |
+| **`soma_and_dend`** | dict(float) | {-80: I<sub>-80,th</sub>, ..., 80: I<sub>80,th</sub>} . I_threshold for spike (nA, dict value)  for each delay (ms, dict key). |
 
 
 ## NEURONモデルを変えたい場合
