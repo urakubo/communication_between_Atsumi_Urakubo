@@ -140,13 +140,8 @@ class Recording():
 		for rec in self.recs.values():
 			rec['data'] = h.Vector().record(rec['target'])
 		
-		self.all = {}
-		self.i_all = []
 		self.onset_for_peak_detecion = arg['time_onset_for_v_peak_detection']
 
-	def clear_all(self):
-		self.all = {}
-		self.i_all = []
 
 	def postprocessing(self, input_amp):
 		self.data = { k: np.array(v['data']) for k, v in self.recs.items() }
