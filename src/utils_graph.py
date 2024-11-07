@@ -19,12 +19,7 @@ def savefig_showfig(filename, dir_imgs = ''):
 	
 	
 	
-def plot_profile(filename, recs, p, i_delay):
-	
-	#time_prerun = p['time_prerun']
-	#time_run    = p['time_run_after_prerun']
-	dist        = p['dist']
-	time_set_zero = p['time_set_zero']
+def plot_profile(filename, recs, time_set_zero, suptitle):
 	
 	## Preparation of plot panels
 	height_ratios = [1,1,3,3]
@@ -32,8 +27,7 @@ def plot_profile(filename, recs, p, i_delay):
 	fig   = plt.figure(constrained_layout=True, figsize=(4.0, 8.0))
 	spec  = fig.add_gridspec(ncols=1, nrows=nrows, height_ratios=height_ratios)
 	axs   = [fig.add_subplot(spec[i, 0]) for i in range(nrows)]
-	fig.suptitle(  'Distance from soma: {:.0f} um\nT(start,Idend)- T(end,Isoma) = {} ms'.format(
-                dist, str(i_delay)) )
+	fig.suptitle( suptitile )
 	
 	#xmin = -150 # -time_prerun
 	#xmax = time_run -100
@@ -98,7 +92,11 @@ class PlotProfiles(u.RepeatHandler):
 		# print('i ', self.i)
 	def postprocessing_dend_amp(self):
 		#pprint.pprint(self.recs)
-		plot_profile(self.get_filename_fig(), self.recs, self.p, self.i_dend_delay )
+		dist     = self.p['dist']
+		time_set_zero = self.p['time_set_zero']
+		suptitle = 'Distance from soma: {:.0f} um\nT(start,Idend)- T(end,Isoma) = {} ms'.\
+			format(dist, str(self.i_dend_delay))
+		plot_profile(self.get_filename_fig(), self.recs, time_set_zero, suptitle )
 
 
 class PlotIforSpike():
